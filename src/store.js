@@ -2,8 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://localhost:8000/api/v1'
+
+axios.defaults.baseURL = process.env.VUE_APP_LARAVEL_API
 
 export default new Vuex.Store({
   state: {
@@ -44,7 +46,7 @@ export default new Vuex.Store({
             localStorage.setItem('access_token', token)
             context.commit('retrieveToken', token)
             resolve(response)
-          
+
           })
           .catch(error => {
             console.log(error)
@@ -59,7 +61,7 @@ export default new Vuex.Store({
           if (response.data.patients) {
             let tempPatients = response.data.patients
             let patients = []
-            for( let key in tempPatients) {
+            for (let key in tempPatients) {
               if (tempPatients.hasOwnProperty(key)) {
                 tempPatients[key].editing = false
                 patients.push(tempPatients[key])
@@ -72,7 +74,7 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    
+
     addPatient(context, patient) {
       context.commit('addPatient', patient)
     },
