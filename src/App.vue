@@ -22,16 +22,16 @@
           </div>
           <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
             <div class="lg:flex-grow text-right font-bold mr-4">
-              <router-link
+              <router-link v-if="loggedIn"
                 to="/patients"
                 class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
               >Patients</router-link>
 
-              <router-link
+              <router-link v-if="loggedIn"
                 :to="{ name: 'invite'}"
                 class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
               >Send Invite</router-link>
-              <router-link
+              <router-link v-if="loggedIn"
                 :to="{ name: 'settings'}"
                 class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
               >Settings</router-link>
