@@ -26,3 +26,6 @@ nav img{
 .router-link-exact-active{
   color: #2db78a
 }
+.bg-404{
+  background-image: url('../images/svg/404-illustration.svg');
+}
