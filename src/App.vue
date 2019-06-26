@@ -22,6 +22,11 @@
           </div>
           <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
             <div class="lg:flex-grow text-right font-bold mr-4">
+              <router-link
+                v-if="loggedIn && isAdmin"
+                :to="{ name: 'admin'}"
+                class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
+              >Admin</router-link>
               <router-link v-if="loggedIn"
                 to="/patients"
                 class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
@@ -46,6 +51,7 @@
       </header>
       <div id="main" class="content-center flex flex-wrap mx-auto">
         <router-view></router-view>
+        
       </div>
     </div>
   </div>
@@ -58,6 +64,9 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters.loggedIn;
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
     }
   },
   data() {
@@ -74,7 +83,7 @@ export default {
   methods: {
     sendInvite() {
       console.log("sending invite");
-    }
+    },
   }
 };
 </script>

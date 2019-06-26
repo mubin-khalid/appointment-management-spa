@@ -5,6 +5,8 @@ import Login from '@/views/Login';
 import Settings from '@/views/Settings';
 import SendInvite from '@/views/SendInvite';
 import NotFound from '@/views/404';
+import Appointment from '@/views/Appointment';
+import Admin from '@/views/admin/Admin';
 
 const routes = [
   {
@@ -37,7 +39,15 @@ const routes = [
     name: 'login',
     props: true,
     meta: {
-      requiresVisitor: true,
+      requiresAuth: false,
+    }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
+    meta: {
+      requiresAuth: true, adminAuth: true
     }
   },
   {
@@ -45,15 +55,20 @@ const routes = [
     component: Register,
     name: 'register',
     meta: {
-      requiresVisitor: true,
+      requiresAuth: false,
     }
   },
   {
     path: '/logout',
     name: 'logout',
-    component: Logout
+    component: Logout,
   },
-  { path: '/404', component: NotFound },
+  {
+    path: '/appointment/:id',
+    name: 'appointment',
+    component: Appointment
+  },
+  { path: '/404', component: NotFound, 'name': 'NotFound' },
   { path: '*', redirect: '/404' },
 ]
 

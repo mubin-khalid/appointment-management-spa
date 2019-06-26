@@ -34,7 +34,7 @@
 <script>
   /* eslint-disable */
   export default {
-    name: 'ModalComponent',
+    name: 'EditPatient',
     props: {
       name: {
         type: String,

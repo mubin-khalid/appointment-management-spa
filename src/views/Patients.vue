@@ -36,7 +36,7 @@
         </div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Email</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Phone</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Invite</div>
+        <!--<div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Invite</div>-->
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Actions</div>
       </div>
       <div
@@ -71,14 +71,14 @@
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
         >{{ patient.phone }}
         </div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
-          <input
-            type="button"
-            class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"
-            value="Send Invite"
-            :id="patient.id"
-          >
-        </div>
+        <!--<div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">-->
+          <!--<input-->
+            <!--type="button"-->
+            <!--class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"-->
+            <!--value="Send Invite"-->
+            <!--:id="patient.id"-->
+          <!--&gt;-->
+        <!--</div>-->
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
           <input
             type="button"
@@ -91,23 +91,26 @@
             class="cursor-pointer mx-2"
             :title=" 'Delete ' + patient.name"
             :id="patient.id"
+            @click="deletePatient(patient.id, index)"
           >
             &times;
           </span>
         </div>
       </div>
     </div>
-    <modal-component v-if="editPatient" :name="patient.name" :email="patient.email" :phone="patient.phone"
-                     @keyup.esc="cancelEditPatient"
-    ></modal-component>
+    <edit-patient v-if="editPatient" :name="patient.name" :email="patient.email" :phone="patient.phone"
+                  @keyup.esc="cancelEditPatient"
+    ></edit-patient>
   </div>
 </template>
 
 <script>
-  import ModalComponent from '../components/EditPatient'
+  import EditPatient from '../components/EditPatientComponent'
+  import Popup from '@/mixins/Popup'
   /* eslint-disable */
   export default {
     name: "patients",
+    mixins: [Popup],
     data() {
       return {
         name: "",
@@ -121,7 +124,7 @@
       };
     },
     components: {
-      'modal-component': ModalComponent,
+      'edit-patient': EditPatient,
     },
     created() {
       this.$store.dispatch("retrievePatients");
@@ -130,6 +133,15 @@
         this.patient.name = payload.name
         this.patient.phone = payload.phone
         this.patient.email = payload.email
+        this.$store.dispatch('editPatient', {
+          name: payload.name,
+          phone: payload.phone,
+          email: payload.email,
+          patient_id: this.patient.id,
+          ssn: null,
+        }).then(() => {
+          this.popup('Patient Updated', 'success', 2000)
+        })
       })
     },
     computed: {
@@ -145,21 +157,24 @@
       }
     },
     methods: {
-      savePatient() {
-        
-      },
       showEdit(patient) {
         this.patient = patient
         this.editPatient = true
       },
       addPatient() {
         this.$store.dispatch('addPatient', {
-          id: this.idForPatient,
           name: this.name,
           phone: this.phone,
           email: this.email,
+          ssn: null
+        }).then(() => {
+          this.name = ''
+          this.phone = ''
+          this.email = ''
+          this.popup('Patient added', 'success', 2000)
+        }).catch(() => {
+          this.popup('Something went wrong', 'error', 3000)
         })
-        this.idForPatient++
       },
       cancelEditPatient() {
         this.editPatient = false
@@ -176,11 +191,29 @@
         }
         else if (this.patients[index].name != this.alteredName) {
           this.patients[index].name = this.alteredName
+          this.$store.dispatch('editPatient', {
+            name: this.patients[index].name,
+            phone: this.patients[index].phone,
+            email: this.patients[index].email,
+            patient_id: this.patients[index].id,
+            ssn: null,
+          }).then(() => {
+            this.popup('Patient Updated', 'success', 2000)
+          })
         }
       },
       cancelEdit(index) {
         this.patients[index].editing = false;
         this.alteredName = this.cachedName
+      },
+
+      deletePatient(id, index) {
+        this.$store.dispatch('deletePatient', {
+          id: id,
+          index: index
+        }).then( () => {
+          this.popup('Patient Deleted', 'success', 2000)
+        })
       }
     }
   };
