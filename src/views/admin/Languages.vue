@@ -46,16 +46,31 @@
       </div>
     </form>
     <accordion title="Test" implemented="_1">
-      <p class="pb-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime 
-        perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus ex excepturi numquam ut voluptas voluptatem!</p>
+      <div class="flex content-start flex-wrap bg-gray-200">
+        <div class="w-1/3 p-2">
+          <p class="p-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
+            perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus
+            ex excepturi numquam ut voluptas voluptatem!</p>
+        </div>
+        <div class="w-1/3 p-2">
+          <p class="p-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
+            perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus
+            ex excepturi numquam ut voluptas voluptatem!</p></div>
+        <div class="w-1/3 p-2">
+          <p class="p-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
+            perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus
+            ex excepturi numquam ut voluptas voluptatem!</p></div>
+      </div>
     </accordion>
     <accordion title="Test1" implemented="_2">
-      <p class="pb-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
-        perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus ex excepturi numquam ut voluptas voluptatem!</p>
+      <p class="p-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
+        perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus ex
+        excepturi numquam ut voluptas voluptatem!</p>
     </accordion>
     <accordion title="Test2" implemented="_3">
       <p class="pb-5"> dd Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt inventore maxime
-        perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus ex excepturi numquam ut voluptas voluptatem!</p>
+        perferendis sapiente. Adipisci debitis dignissimos eveniet itaque nihil nobis, saepe similique. Ab delectus ex
+        excepturi numquam ut voluptas voluptatem!</p>
     </accordion>
     <vue-ads-pagination
       :total-items="total ? total : 1"
@@ -148,10 +163,10 @@
           email: this.email,
           phone: this.phone,
           facility: this.facility,
-        }).then( () =>  {
+        }).then(() => {
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
           this.name = this.password = this.email = this.phone = this.facility = ''
-        }).catch( () => {
+        }).catch(() => {
           this.popup('Unable to add user.', 'error', 2000)
         })
       },
