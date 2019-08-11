@@ -32,6 +32,7 @@
 
 <script>
   import Popup from '@/mixins/Popup'
+  import {mapActions} from 'vuex'
 
   export default {
     name: "Appointment",
@@ -45,11 +46,12 @@
       }
     },
     created() {
-      this.$store.dispatch('getAppointment', {
+      this.get({
         id: this.$route.params.id
       }).then(response => {
+        console.log(response)
         this.details = response.data.template
-        if(typeof response.data.status !== 'undefined' && response.data.status == 400) {
+        if (typeof response.data.status !== 'undefined' && response.data.status == 400) {
           this.disable = 'hidden'
         }
       }).catch(error => {
@@ -59,6 +61,9 @@
       })
     },
     methods: {
+      ...mapActions('appointment', [
+        'get'
+      ]),
       viewDetail() {
         this.showDetails = !this.showDetails
         if (!this.showDetails) {
@@ -72,11 +77,11 @@
         this.$store.dispatch('cancelAppointment', {
           id: this.$route.params.id,
           cancelled_by: 'client'
-        }).then( () => {
+        }).then(() => {
           this.popup('Appointment Cancelled', 'success', 5000)
           this.disable = 'hidden'
           this.details = 'Appointment Cancelled.'
-        }).catch( error => {
+        }).catch(error => {
           this.popup(error.response.data.message, 'error', 3000)
         })
       }
@@ -92,5 +97,13 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
   {
     opacity: 0;
+  }
+
+  header {
+    display: none !important;
+  }
+
+  header::before {
+    display: none !important;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="w-1/4 m-auto">
     <div class="w-full max-w-xs text-center mt-8">
-      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="login">
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="attemptLogin">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
             Username
@@ -35,9 +35,9 @@
 
 <script>
   import Popup from '@/mixins/Popup'
-  
+  import {mapActions, mapMutations} from 'vuex'
   export default {
-    name: "Login",
+    name: "login",
     mixins: [Popup],
     data() {
       return {
@@ -51,18 +51,31 @@
       }
     },
     methods: {
-      login() {
+      ...mapActions('auth', ['login', 'getUser']),
+      ...mapMutations('auth', []),
+      attemptLogin() {
         if(this.username.trim() == '' ||  this.password.trim() == '') {
           this.popup('Please fill-in all fields.', 'error', 3000)
           return;
         }
-        this.$store.dispatch('retrieveToken', {
+        this.login({
           username: this.username,
           password: this.password,
         })
-          .then(_ => {
+        // this.$store.dispatch('retrieveToken', {
+        //   username: this.username,
+        //   password: this.password,
+        // })
+          .then(response => {
+            console.log(response)
+            if(!response) {
+              this.popup('Invalid Credentials', 'error', 3000)
+              this.password = ''
+              return
+            }
             this.popup('Logged in successfully', 'success', 2000)
-            this.$store.dispatch('getUser').then(_ => {
+            this.getUser().then(_ => {
+              console.log(this.$store.getters['auth/isAdmin'])
               this.$router.push({name: 'invite'})
             })
           })

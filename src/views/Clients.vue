@@ -1,6 +1,6 @@
 <template>
-  <div id="patients" class="m-auto">
-    <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addPatient">
+  <div id="clients" class="m-auto">
+    <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addClient">
       <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
         <input
           class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -31,8 +31,9 @@
       </div>
     </form>
     <form action="" class="w-full bg-white rounded px-3 mb-2 shadow-2xl border-b-2 border-teal-500">
-      <input type="text" 
-             class="appearance-none border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none mb-2" placeholder="Search" v-model="searchClients">
+      <input type="text"
+             class="appearance-none border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none mb-2"
+             placeholder="Search" v-model="searchClients">
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded">
@@ -45,16 +46,16 @@
       </div>
       <div
         class="table-row flex p-4 border border-black"
-        v-for="(patient, index) in patients"
-        :key="patient.id"
-        :id="patient.id"
+        v-for="(client, index) in clients"
+        :key="client.id"
+        :id="client.id"
       >
         <div class="bg-white">
           <div
             class="table-cell bg-white text-gray-700 px-4 py-2 text-md-center"
-            v-if="!patient.editing"
+            v-if="!client.editing"
             @dblclick="edit(index)"
-          >{{ patient.name}}
+          >{{ client.name}}
           </div>
           <input
             v-else
@@ -69,51 +70,82 @@
         </div>
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ patient.email }}
+        >{{ client.email }}
         </div>
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ patient.phone }}
+        >{{ client.phone }}
         </div>
         <!--<div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">-->
-          <!--<input-->
-            <!--type="button"-->
-            <!--class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"-->
-            <!--value="Send Invite"-->
-            <!--:id="patient.id"-->
-          <!--&gt;-->
+        <!--<input-->
+        <!--type="button"-->
+        <!--class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"-->
+        <!--value="Send Invite"-->
+        <!--:id="client.id"-->
+        <!--&gt;-->
         <!--</div>-->
         <div class="table-cell bg-white text-gray-700 px-2 py-2 text-sm flex w-2/12">
           <input
             type="button"
             class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer mx-2"
             value="Edit"
-            :id="patient.id"
-            @click="showEdit(patient)"
+            :id="client.id"
+            @click="showEdit(client)"
           >
           <span
             class="cursor-pointer mx-2"
-            :title=" 'Delete ' + patient.name"
-            :id="patient.id"
-            @click="deletePatient(patient.id, index)"
+            :title=" 'Delete ' + client.name"
+            :id="client.id"
+            @click="deleteClient(client.id, index)"
           >
             &times;
           </span>
         </div>
       </div>
     </div>
-    <edit-patient v-if="editPatient" :name="patient.name" :email="patient.email" :phone="patient.phone"
-                  @keyup.esc="cancelEditPatient"
-    ></edit-patient>
+    <edit-client v-if="editClient" :name="client.name" :email="client.email" :phone="client.phone"
+                 @keyup.esc="cancelEditClient"
+    ></edit-client>
+    <vue-ads-pagination
+      :total-items="total ? total : 1"
+      :max-visible-pages="5"
+      :page="page"
+      :loading="loading"
+      @page-change="pageChange"
+      @range-change="rangeChange"
+    >
+      <template slot-scope="props">
+        <div class="vue-ads-pr-2 vue-ads-leading-loose">
+          <span>Clients {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total 
+            }}</span></span>
+        </div>
+      </template>
+      <template
+        slot="buttons"
+        slot-scope="props"
+      >
+        <vue-ads-page-button
+          v-for="(button, key) in props.buttons"
+          :key="key"
+          v-bind="button"
+          @page-change="page = button.page"
+        />
+      </template>
+    </vue-ads-pagination>
   </div>
 </template>
 
 <script>
-  import EditPatient from '../components/EditPatientComponent'
+  import EditClient from '@/components/EditClientComponent'
   import Popup from '@/mixins/Popup'
+  import '@fortawesome/fontawesome-free/css/all.min.css'
+  import 'vue-ads-pagination/dist/vue-ads-pagination.css'
+  import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
+
+  import {mapActions, mapGetters} from "vuex";
   /* eslint-disable */
   export default {
-    name: "patients",
+    name: "clients",
     mixins: [Popup],
     data() {
       return {
@@ -122,36 +154,45 @@
         phone: "",
         alteredName: "",
         cachedName: "",
-        editPatient: false,
-        patient: {},
+        editClient: false,
+        client: {},
         searchClients: '',
+        loading: false,
+        page: 0,
       };
     },
     components: {
-      'edit-patient': EditPatient,
+      'edit-client': EditClient,
     },
     created() {
-      this.$store.dispatch("retrievePatients");
-      eventBus.$on('donePatientEditing', (payload) => {
-        this.editPatient = false
-        this.patient.name = payload.name
-        this.patient.phone = payload.phone
-        this.patient.email = payload.email
-        this.$store.dispatch('editPatient', {
+      this.retrieveClients({
+        page: this.page,
+      }),
+      eventBus.$on('doneClientEditing', (payload) => {
+        this.editClient = false
+        this.client.name = payload.name
+        this.client.phone = payload.phone
+        this.client.email = payload.email
+        this.updateClientModal({
           name: payload.name,
           phone: payload.phone,
           email: payload.email,
-          patient_id: this.patient.id,
+          client_id: this.client.id,
           ssn: null,
         }).then(() => {
-          this.popup('Patient Updated', 'success', 2000)
+          this.popup('Client Updated', 'success', 2000)
         })
       })
     },
     computed: {
-      patients() {
-        return this.$store.getters.patients;
-      }
+      ...mapGetters({
+        clients: 'client/clients',
+        total: 'client/total'
+      })
+    },
+    components: {
+      VueAdsPagination,
+      VueAdsPageButton,
     },
     directives: {
       focus: {
@@ -160,13 +201,45 @@
         }
       }
     },
+    watch: {
+      searchClients(after, before) {
+        this.performSearch()
+      }
+    },
     methods: {
-      showEdit(patient) {
-        this.patient = patient
-        this.editPatient = true
+      ...mapActions('client', {
+        retrieveClients: 'retrieveClients',
+        updateClient: 'editClient',
+        addNew: 'addClient',
+        delete: 'deleteClient',
+        updateClientModal: 'editClientModal',
+        search: 'search'
+      }),
+      pageChange(page) {
+        this.page = page;
       },
-      addPatient() {
-        this.$store.dispatch('addPatient', {
+
+      rangeChange() {
+        if(this.searchClients != '') {
+          this.performSearch()
+        } else {
+          this.retrieveClients({
+            page: this.page,
+          })
+        }
+      },
+      performSearch() {
+        this.search({
+          keywords: this.searchClients,
+          page: this.page
+        })
+      },
+      showEdit(client) {
+        this.client = client
+        this.editClient = true
+      },
+      addClient() {
+        this.addNew({
           name: this.name,
           phone: this.phone,
           email: this.email,
@@ -175,49 +248,48 @@
           this.name = ''
           this.phone = ''
           this.email = ''
-          this.popup('Patient added', 'success', 2000)
+          this.popup('Client added', 'success', 2000)
         }).catch(() => {
           this.popup('Something went wrong', 'error', 3000)
         })
       },
-      cancelEditPatient() {
-        this.editPatient = false
+      cancelEditClient() {
+        this.editClient = false
       },
       edit(index) {
-        this.patients[index].editing = true;
-        this.cachedName = this.patients[index].name;
+        this.clients[index].editing = true;
+        this.cachedName = this.clients[index].name;
         this.alteredName = this.cachedName
       },
       doneEdit(index) {
-        this.patients[index].editing = false;
+        this.clients[index].editing = false;
         if (this.alteredName.trim() == "") {
           this.alteredName = this.cachedName
-        }
-        else if (this.patients[index].name != this.alteredName) {
-          this.patients[index].name = this.alteredName
-          this.$store.dispatch('editPatient', {
-            name: this.patients[index].name,
-            phone: this.patients[index].phone,
-            email: this.patients[index].email,
-            patient_id: this.patients[index].id,
+        } else if (this.clients[index].name != this.alteredName) {
+          this.clients[index].name = this.alteredName
+          this.updateClient({
+            name: this.clients[index].name,
+            phone: this.clients[index].phone,
+            email: this.clients[index].email,
+            client_id: this.clients[index].id,
             ssn: null,
             index: index
           }).then(() => {
-            this.popup('Patient Updated', 'success', 2000)
+            this.popup('Client Updated', 'success', 2000)
           })
         }
       },
       cancelEdit(index) {
-        this.patients[index].editing = false;
+        this.clients[index].editing = false;
         this.alteredName = this.cachedName
       },
 
-      deletePatient(id, index) {
-        this.$store.dispatch('deletePatient', {
+      deleteClient(id, index) {
+        this.delete({
           id: id,
           index: index
-        }).then( () => {
-          this.popup('Patient Deleted', 'success', 2000)
+        }).then(() => {
+          this.popup('Client Deleted', 'success', 2000)
         })
       }
     }

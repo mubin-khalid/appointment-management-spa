@@ -122,6 +122,7 @@
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import Popup from '../../mixins/Popup'
+  import {mapActions, mapGetters} from "vuex";
 
   export default {
     name: "manage-users",
@@ -138,25 +139,29 @@
       }
     },
     created() {
+      //this.loadUsers({page: this.page})
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
     },
     computed: {
-      users() {
-        return this.$store.getters.getUsers.users
-      },
-      total() {
-        return this.$store.getters.getUsers.total
-      }
+      ...mapGetters('user', [
+        'users',
+        'total'
+      ])
     },
     methods: {
+      ...mapActions('user', {
+        getUsers: 'loadUsers',
+        add: 'addUser',
+        delete: 'deleteUser'
+      }),
       pageChange(page) {
         this.page = page;
       },
       deleteUser(user, index) {
-        this.$store.dispatch('deleteUser', {
+        this.delete({
           id: user.id,
           index: index
         }).then(() => {
@@ -164,7 +169,7 @@
         })
       },
       addUser() {
-        this.$store.dispatch('addUser', {
+        this.add({
           name: this.name,
           password: this.password,
           email: this.email,
@@ -179,7 +184,7 @@
       },
 // eslint-disable-next-line no-unused-vars
       rangeChange(_, __) {
-        this.$store.dispatch('manageUsers', {
+        this.getUsers({
           page: this.page
         })
       },
