@@ -187,7 +187,7 @@ export default new Vuex.Store({
         return new Promise((resolve, reject) => {
           axios.get('/languages')
             .then(response => {
-              let filtered = response.data.filter(function (el) {
+              let filtered = response.data.data.filter(function (el) {
                 return el.active == 1
               })
               context.commit('setLanguages', filtered)
@@ -237,10 +237,10 @@ export default new Vuex.Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
       if (context.getters.loggedIn) {
         return new Promise((resolve, reject) => {
-          axios.get('/appointments/' + payload.page + '/' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '/' + all)
+          axios.get('/appointments/?page_number=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '&all=' + all)
             .then(response => {
               console.log(response.data)
-              context.commit('setAppointments', response.data)
+              context.commit('setAppointments', response.data.data)
               resolve(response)
             })
             .catch(error => {
@@ -257,7 +257,13 @@ export default new Vuex.Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
       if (context.getters.loggedIn) {
         return new Promise((resolve, reject) => {
-          axios.get('/notifications/' + payload.page + '/' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '/' + all)
+          axios.get('/notifications', {
+            params: {
+              page: payload.page,
+              per_page: process.env.VUE_APP_APPOINTMENTS_PER_PAGE,
+              all: all
+            }
+          })
             .then(response => {
               console.log(response.data)
               context.commit('notification', response.data)
@@ -310,9 +316,14 @@ export default new Vuex.Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
       if (context.getters.loggedIn && context.getters.isAdmin) {
         return new Promise((resolve, reject) => {
-          axios.get('/users/' + payload.page + '/' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE)
+          axios.get(process.env.VUE_APP_ADMIN_USERS, {
+            params: {
+              page_number: payload.page,
+              per_page: process.env.VUE_APP_APPOINTMENTS_PER_PAGE,
+            }
+          })
             .then(response => {
-              context.commit('setUsers', response.data)
+              context.commit('setUsers', response.data.data)
               resolve(response)
             })
             .catch(error => {

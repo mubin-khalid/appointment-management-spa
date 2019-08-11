@@ -30,6 +30,10 @@
         </button>
       </div>
     </form>
+    <form action="" class="w-full bg-white rounded px-3 mb-2 shadow-2xl border-b-2 border-teal-500">
+      <input type="text" 
+             class="appearance-none border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none mb-2" placeholder="Search" v-model="searchClients">
+    </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded">
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex" title="Double click to edit">Name
@@ -79,7 +83,7 @@
             <!--:id="patient.id"-->
           <!--&gt;-->
         <!--</div>-->
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
+        <div class="table-cell bg-white text-gray-700 px-2 py-2 text-sm flex w-2/12">
           <input
             type="button"
             class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer mx-2"
@@ -120,7 +124,7 @@
         cachedName: "",
         editPatient: false,
         patient: {},
-        idForPatient: 6
+        searchClients: '',
       };
     },
     components: {
@@ -197,6 +201,7 @@
             email: this.patients[index].email,
             patient_id: this.patients[index].id,
             ssn: null,
+            index: index
           }).then(() => {
             this.popup('Patient Updated', 'success', 2000)
           })
