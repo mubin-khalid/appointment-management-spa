@@ -5,27 +5,33 @@
     @change="languageChanged($event)"
   >
     <option value="0">Please Select</option>
-    <option v-for="language in languages" :id="language.id" :value="language.id">{{ 
-      language.name 
-      }}</option>
+    <option v-for="language in languages" :id="language.id" :value="language.id">{{
+      language.language
+      }}
+    </option>
   </select>
 </template>
 
 <script>
+  import {mapActions, mapGetters} from 'vuex';
+
   export default {
     name: "LanguageComponent",
     created() {
-      this.$store.dispatch('getLanguages')
+      this.getLanguages()
     },
     computed: {
-      languages() {
-        return this.$store.getters.getLanguages
-      }
+      ...mapGetters('language', {
+        languages: 'getLanguages'
+      }),
     },
     methods: {
+      ...mapActions('language', [
+        'getLanguages'
+      ]),
       languageChanged: event => {
-        eventBus.$emit('languageChanged', { "languageId": event.target.value})
-      } 
+        eventBus.$emit('languageChanged', {"languageId": event.target.value})
+      }
     }
   }
 </script>
