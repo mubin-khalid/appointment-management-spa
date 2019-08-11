@@ -1,5 +1,5 @@
 import Logout from '@/views/Logout';
-import Patients from '@/views/Patients';
+import Clients from '@/views/Clients';
 import Register from '@/views/Register';
 import Login from '@/views/Login';
 import Settings from '@/views/Settings';
@@ -18,9 +18,9 @@ const routes = [
     }
   },
   {
-    path: '/patients',
-    component: Patients,
-    name: 'patients',
+    path: '/clients',
+    component: Clients,
+    name: 'clients',
     meta: {
       requiresAuth: true,
     }
@@ -66,7 +66,10 @@ const routes = [
   {
     path: '/appointment/:id',
     name: 'appointment',
-    component: Appointment
+    component: Appointment,
+    meta: {
+      requiresAuth: false, layout: 'guest-appointment'
+    }
   },
   { path: '/404', component: NotFound, 'name': 'NotFound' },
   { path: '*', redirect: '/404' },
