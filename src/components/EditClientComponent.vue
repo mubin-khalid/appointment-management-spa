@@ -19,7 +19,9 @@
               <slot name="footer">
                 <input type="text" v-model="updatedPhone" id="phone"
                        class="border leading-tight p-2 rounded text-grey-700 w-2/3">
-                <button class="bg-blue-600 float-right leading-loose px-3 py-1 rounded text-white" @click="close">
+                <button class="bg-blue-600 float-right leading-loose px-3 py-1 rounded text-white" @click="close"
+                @keyup.enter="close"
+                >
                   Save
                 </button>
               </slot>
@@ -34,7 +36,7 @@
 <script>
   /* eslint-disable */
   export default {
-    name: 'EditPatient',
+    name: 'EditClient',
     props: {
       name: {
         type: String,
@@ -47,7 +49,7 @@
       phone: {
         type: String,
         required: true
-      },
+      }
     },
     data() {
       return {
@@ -58,10 +60,10 @@
     },
     methods: {
       close() {
-        eventBus.$emit('donePatientEditing', {
+        eventBus.$emit('doneClientEditing', {
           name: this.updatedName,
           email: this.updatedEmail,
-          phone: this.updatedPhone,
+          phone: this.updatedPhone
         })
       }
     }
