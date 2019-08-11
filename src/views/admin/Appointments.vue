@@ -3,9 +3,9 @@
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Appointments</h2>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Patient Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Patient Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Patient Phone</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Email</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Date</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Time</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Reminder Sent</div>
@@ -13,22 +13,23 @@
       </div>
       <div
         class="table-row flex p-4 border border-black text-center"
-        v-for="(appointment, index) in appointments.appointments"
+        v-if="total > 0"
+        v-for="(appointment, index) in appointments"
         :key="appointment.id"
         :id="appointment.id"
       >
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ appointment.patient.name }}
+        >{{ appointment.client.name }}
         </div>
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ appointment.patient.email }}
+        >{{ appointment.client.email }}
         </div>
 
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ appointment.patient.phone }}
+        >{{ appointment.client.phone }}
         </div>
 
         <!--<div-->
@@ -72,7 +73,7 @@
       </div>
     </div>
     <vue-ads-pagination
-      :total-items="total ? total : 1"
+      :total-items="total? total : 1"
       :max-visible-pages="5"
       :page="page"
       :loading="loading"
@@ -104,6 +105,7 @@
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import Popup from '@/mixins/Popup'
+  import {mapActions, mapGetters} from "vuex";
 
   export default {
     name: "Appointments",
@@ -115,32 +117,38 @@
       }
     },
     created() {
+      this.loadAppointments({
+        page: this.page,
+        all: true,
+      })
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
     },
     computed: {
-      appointments() {
-        return this.$store.getters.getAppointments
-      },
-      total() {
-        return this.$store.getters.getAppointments.total
-      }
+      ...mapGetters('appointment', {
+        appointments: 'appointments',
+        total: 'total'
+      })
     },
     methods: {
+      ...mapActions('appointment', [
+        'loadAppointments',
+        'cancel',
+      ]),
       pageChange(page) {
         this.page = page;
       },
 
       rangeChange() {
-        this.$store.dispatch('loadAppointments', {
+        this.loadAppointments({
           page: this.page,
           all: true,
         })
       },
       cancelAppointment(id, index) {
-        this.$store.dispatch('cancelAppointment', {
+        this.cancel({
           id: id,
           cancelled_by: 'admin',
           index: index
@@ -154,7 +162,7 @@
         this.$store.dispatch('sendReminder', {
           'notification_type': 'email',
           'appointment_id': appointment.id
-        }).then( () => {
+        }).then(() => {
           this.popup('Reminder Sent', 'success', 2000)
           appointment.reminder_sent = 1
         })
@@ -162,9 +170,9 @@
       showAlert(appointment) {
         this.$swal({
           title: '<span class = "font-sm"> Details </span>',
-          html: '<span class = "font-bold w-full"> Patient</span>: ' + appointment.patient.name +
-            '<br /><span class = "mb-2 font-bold w-full"> Phone</span>: ' + appointment.patient.phone +
-            '<br /><span class = "font-bold"> Email</span>: ' + appointment.patient.email +
+          html: '<span class = "font-bold w-full"> Patient</span>: ' + appointment.client.name +
+            '<br /><span class = "mb-2 font-bold w-full"> Phone</span>: ' + appointment.client.phone +
+            '<br /><span class = "font-bold"> Email</span>: ' + appointment.client.email +
             '<br /><span class = "font-bold"> Appointment Date</span>: ' + appointment.appointment_date +
             '<br /><span class = "font-bold"> Appointment Time</span>: ' + appointment.appointment_time +
             '<br /><span class = "font-bold"> BOKN. </span>: ' + appointment.bokn,

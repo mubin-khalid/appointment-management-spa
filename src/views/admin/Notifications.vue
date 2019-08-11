@@ -3,10 +3,9 @@
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Notifications</h2>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Patient Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Patient Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Patient Phone</div>
-        <!--<div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment</div>-->
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Email</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Notification</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Notification Type</div>
       </div>
@@ -18,18 +17,18 @@
       >
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ notification.patient.name }}
+        >{{ notification.client.name }}
         </div>
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ notification.patient.email }}
+        >{{ notification.client.email }}
         </div>
 
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ notification.patient.phone }}
+        >{{ notification.client.phone }}
         </div>
-        
+
 
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
@@ -73,7 +72,7 @@
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
-
+  import {mapActions, mapGetters} from 'vuex'
   export default {
     name: "notifications",
     data() {
@@ -89,20 +88,21 @@
       VueAdsPageButton,
     },
     computed:{
-      notifications() {
-        return this.$store.getters.getNotifications.notifications
-      },
-      total() {
-        return this.$store.getters.getNotifications.total
-      }
+      ...mapGetters('notifications', [
+        'notifications',
+        'total'
+      ]),
     },
     methods: {
+      ...mapActions('notifications', [
+        'loadNotifications'
+      ]),
       pageChange(page) {
         this.page = page;
       },
 
       rangeChange(_, __) {
-        this.$store.dispatch('loadNotifications', {
+        this.loadNotifications({
           page: this.page,
           all: true,
         })

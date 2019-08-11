@@ -1,6 +1,43 @@
 <template>
   <div class="w-full">
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Translation Agencies</h2>
+    <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addTranslationAgency">
+      <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
+        <input
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="ABC Agency"
+          aria-label="Full name"
+          v-model="name"
+        >
+        <input
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="agency@example.com"
+          aria-label="email"
+          v-model="email"
+        >
+        <input
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="Phone"
+          aria-label="phone"
+          v-model="phone"
+        >
+        <input
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="Fax"
+          aria-label="fax"
+          v-model="fax"
+        >
+        <button
+          class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+          type="submit"
+        >Add
+        </button>
+      </div>
+    </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Name</div>
@@ -66,34 +103,61 @@
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
+  import Popup from '@/mixins/Popup'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
     name: "translation-agencies",
+    mixins: [Popup],
     data() {
       return {
         loading: false,
         page: 0,
+        name: '',
+        email: '',
+        phone: '',
+        fax: '',
       }
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
     },
-    computed:{
-      agencies() {
-        return this.$store.getters.translation_agencies.translation_agencies
-      },
-      total() {
-        return this.$store.getters.translation_agencies.total
-      }
+    computed: {
+      ...mapGetters('translationAgencies', {
+        agencies: 'translation_agencies',
+        total: 'total'
+      }),
     },
     methods: {
+      ...mapActions('translationAgencies', [
+        'getTranslationAgencies',
+        'store'
+      ]),
       pageChange(page) {
         this.page = page;
       },
 
+      addTranslationAgency() {
+        if (this.name.trim() == '' || this.email.trim() == '' || this.phone.trim() == '' || this.fax.trim() == '') {
+          this.popup('Please fill all fields before adding new Agency', 'error', 3000)
+          return;
+        }
+        this.store({
+          name: this.name,
+          email: this.email,
+          phone: this.phone,
+          fax: this.fax
+        }).then(_ => {
+          this.popup('Agency Added successfully.', 'success', 2000)
+          this.name = ''
+          this.email = ''
+          this.phone = ''
+          this.fax = ''
+        })
+      },
       rangeChange() {
-        this.$store.dispatch('getTranslationAgencies', {
+        this.getTranslationAgencies({
           page: this.page,
           all: false,
         })

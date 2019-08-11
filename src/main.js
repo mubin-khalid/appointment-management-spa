@@ -1,15 +1,19 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/store'
 import VueSweetalert2 from 'vue-sweetalert2';
+import Default from './layouts/Default'
+import GuestAppointmentLayout from './layouts/guestAppointmentLayout'
 
 Vue.config.productionTip = false
+Vue.component('default-layout', Default)
+Vue.component('guest-appointment-layout', GuestAppointmentLayout)
 window.eventBus = new Vue()
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !to.meta.adminAuth) {
-    if (!store.getters.loggedIn) {
+    if (!store.getters['auth/loggedIn']) {
       next({
         name: 'login',
       })
@@ -17,17 +21,13 @@ router.beforeEach((to, from, next) => {
       next()
     }
   } else if (to.matched.some(record => record.meta.adminAuth)) {
-    if (!store.getters.loggedIn) {
+    if (!store.getters['auth/loggedIn']) {
       next({
         name: 'login',
       })
-    } else if(store.getters.user){
-      console.log(store.getters.user)
-      next({
-        name: 'admin',
-      })
-    }
-    else{
+    } else if (store.getters['auth/isAdmin']) {
+      next()
+    } else {
       next()
     }
   } else {
@@ -63,3 +63,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 Vue.use(VueSweetalert2)
+window._ = require('lodash');
