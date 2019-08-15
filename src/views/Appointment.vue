@@ -1,13 +1,7 @@
 <template>
   <div id="appointment" class="m-auto mt-8 rounded w-full text-center">
     <div class="bg-white m-auto max-w-sm overflow-hidden rounded shadow-lg">
-
-      <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">Welcome</div>
-        <p class="text-gray-700 text-base">
-          You have an appointment scheduled.
-        </p>
-      </div>
+      
       <div class="px-6 py-4">
         <button
           class="inline-block rounded bg-teal-500 p-2 text-white appearance-none hover:bg-teal-600 cursor-pointer mr-2"
@@ -49,20 +43,22 @@
       this.get({
         id: this.$route.params.id
       }).then(response => {
-        console.log(response)
+        console.log(response.status)
         this.details = response.data.template
-        if (typeof response.data.status !== 'undefined' && response.data.status == 400) {
+        if (typeof response.status !== 'undefined' && response.status == 'fail') {
           this.disable = 'hidden'
         }
       }).catch(error => {
-        this.details = error.response.data.message
-        this.popup(error.response.data.message, 'error', 3000)
+        console.log(error)
+        this.details = error.response.data.template
+        this.popup(error.response.data.template, 'error', 3000)
         this.$router.push({name: 'NotFound'})
       })
     },
     methods: {
       ...mapActions('appointment', [
-        'get'
+        'get',
+        'cancel'
       ]),
       viewDetail() {
         this.showDetails = !this.showDetails
@@ -74,7 +70,7 @@
       },
       cancelAppointment() {
         console.log('cancel')
-        this.$store.dispatch('cancelAppointment', {
+        this.cancel({
           id: this.$route.params.id,
           cancelled_by: 'client'
         }).then(() => {
