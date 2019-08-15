@@ -33,8 +33,19 @@ export default {
       })
   },
   
-  languageWithTemplates(context, payload) {
-    
+  loadLanguageWithTemplates(context, payload) {
+    return Request({
+      method: 'get',
+      endpoint: 'languages-with-templates?page_number=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE,
+    }).then(response => {
+      context.commit('setLanguagesWithTemplatesTotal', response.data.total)
+      delete response.data.total
+      context.commit('setLanguagesWithTemplates', response.data)
+      return (response.data)
+    })
+      .catch(error => {
+        return (error)
+      })
   }
   
 }
