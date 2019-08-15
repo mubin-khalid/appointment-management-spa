@@ -203,7 +203,8 @@
           is_cancelled: false,
           appointment_date: this.date,
           appointment_time: this.time,
-          ta: this.ta
+          ta: this.ta,
+          message: this.message
         }).then( () => {
           this.popup('Appointment booked', 'success', 2000)
         })
