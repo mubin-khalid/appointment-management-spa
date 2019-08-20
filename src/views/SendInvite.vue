@@ -30,16 +30,16 @@
       <div class="flex flex-wrap -mx-3">
         <div class="w-full px-3 md:mb-0">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                 for="patient_phone">
+                 for="client_phone">
             Client phone number
           </label>
           <select
             class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"
-            id="patient_phone" v-model="patient"
+            id="client_phone" v-model="client"
           >
-            <option value="0">Select Patient</option>
-            <option v-for="patient in patients" :key="patient.id" :id="patient.id" :value="patient.id">
-              {{ patient.name }} ({{ patient.phone }})
+            <option value="0">Select Client</option>
+            <option v-for="client in clients" :key="client.id" :id="client.id" :value="client.id">
+              {{ client.name }} ({{ client.phone }})
             </option>
           </select>
         </div>
@@ -78,19 +78,14 @@
             class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"
             id="ta" v-model="ta"
           >
-            <option value="0">Select Agency</option>
-            <option v-for="agency in translationAgencies" :key="agency.id" :id="agency.id" :value="agency.id">
+<!--            <option value="0">Select Agency</option>-->
+            <option v-for="agency in user.translation_agencies" :key="agency.id" :value="agency.id">
               {{ agency.name }}
             </option>
           </select>
         </div>
       </div>
-      <!--<div class="w-full px-3 mb-2">-->
-        <!--<button-->
-          <!--class="w-full appearance-none block w-full bg-blue-500 text-white border rounded hover:border-blue-900 py-3 px-4 mb-3 leading-tight"-->
-          <!--@click="saveAppointment">Create Appointment-->
-        <!--</button>-->
-      <!--</div>-->
+      
       <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full px-3  md:mb-0">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -117,34 +112,34 @@
 <script>
   import LanguageComponent from '../components/LanguageComponent'
   import Popup from '@/mixins/Popup'
+  import {mapActions, mapGetters} from 'vuex'
   export default {
     name: "send-invite",
     mixins: [Popup],
     components: {
       'language': LanguageComponent
-
     },
     computed: {
-      patients() {
-        return this.$store.getters.patients;
-      },
-      departments() {
-        return this.$store.getters.getUser.departments
-      },
-      translationAgencies() {
-        return this.$store.getters.getUser.translation_agencies
-      }
+      ...mapGetters({
+        clients: 'client/clients',
+        user: 'auth/user',
+      }),
     },
     created() {
-      this.$store.dispatch("retrievePatients");
+      this.retrieveClients({
+        page: 0,
+        all: true
+      }),
+      
       eventBus.$on('languageChanged', (payload) => {
         this.language = payload.languageId
-        this.$store.dispatch('getTemplate', {
+        this.getTemplate({
           language: payload.languageId,
           appointment_date: this.date,
           appointment_time: this.time,
-        }).then((response) => {
-          this.message = response.data.template
+          template_type: 'register'
+        }).then((template) => {
+          this.message = template
         })
       })
     },
@@ -155,28 +150,39 @@
           new Date().getDate()).slice(-2),
         time: ("0" + new Date().getHours()).slice(-2) + ':' + ("0" + new Date().getMinutes()).slice(-2) +
           ':00',
-        patient: '0',
+        client: '0',
         department: '0',
         bokn: '',
-        ta: '0',
+        ta: 1,
         message: '',
       }
     },
     methods: {
+      ...mapActions('client', [
+        'retrieveClients'
+      ]),
+      
+      ...mapActions('appointment', [
+        'save'
+      ]),
+      ...mapActions('language', [
+        'getTemplate'
+      ]),
       sendInvite() {
         console.log('sending invite')
       },
       loadTemplate() {
-        this.$store.dispatch('getTemplate', {
+        this.getTemplate({
           language: this.language,
           appointment_date: this.date,
           appointment_time: this.time,
-        }).then((response) => {
-          this.message = response.data.template
+          template_type: 'register'
+        }).then((template) => {
+          this.message = template
         })
       },
       saveAppointment() {
-        if(this.patient == 0) {
+        if(this.client == 0) {
           this.popup('Please select Patient', 'error', 2000)
           return
         }
@@ -188,8 +194,8 @@
           this.popup('Please enter BOKN.', 'error', 2000)
           return
         }
-        this.$store.dispatch('saveAppointment', {
-          patient_id: this.patient,
+        this.save({
+          client_id: this.client,
           // department_id: this.department,
           bokn: this.bokn,
           language: this.language,
@@ -197,7 +203,8 @@
           is_cancelled: false,
           appointment_date: this.date,
           appointment_time: this.time,
-          ta: this.ta
+          ta: this.ta,
+          message: this.message
         }).then( () => {
           this.popup('Appointment booked', 'success', 2000)
         })

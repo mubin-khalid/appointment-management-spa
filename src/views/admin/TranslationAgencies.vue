@@ -66,7 +66,7 @@
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
-
+  import {mapActions, mapGetters} from 'vuex'
   export default {
     name: "translation-agencies",
     data() {
@@ -80,22 +80,23 @@
       VueAdsPageButton,
     },
     computed:{
-      agencies() {
-        return this.$store.getters.translation_agencies.translation_agencies
-      },
-      total() {
-        return this.$store.getters.translation_agencies.total
-      }
+      ...mapGetters('translationAgencies', {
+        agencies: 'translation_agencies',
+        total: 'total'
+      }),
     },
     methods: {
+      ...mapActions('translationAgencies', [
+        'getTranslationAgencies'
+      ]),
       pageChange(page) {
         this.page = page;
       },
 
-      rangeChange(start, end) {
-        this.$store.dispatch('getTranslationAgencies', {
+      rangeChange() {
+        this.getTranslationAgencies({
           page: this.page,
-            all: true,
+          all: true,
         })
       },
     },

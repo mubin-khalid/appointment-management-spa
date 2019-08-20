@@ -8,6 +8,7 @@
       <notifications v-if="showNotificationsComponent"></notifications>
       <password v-if="showPasswordComponent"></password>
       <manage-users v-if="showUserComponent"></manage-users>
+      <languages v-if="showLanguageComponent"></languages>
     </div>
   </main>
 
@@ -21,6 +22,7 @@
   import Notifications from './Notifications'
   import Password from './Password'
   import ManageUsers from './ManageUsers'
+  import Languages from './Languages'
 
   export default {
     name: "Settings",
@@ -30,7 +32,8 @@
       TranslationAgencies,
       Notifications,
       Password,
-      ManageUsers
+      ManageUsers,
+      Languages
     },
     data(){
       return {
@@ -38,7 +41,8 @@
         showTaComponent: false,
         showNotificationsComponent: false,
         showPasswordComponent: false,
-        showUserComponent: false
+        showUserComponent: false,
+        showLanguageComponent: false,
       }
     },
     created(){
@@ -48,6 +52,7 @@
         this.showNotificationsComponent = false
         this.showPasswordComponent = false
         this.showUserComponent = false
+        this.showLanguageComponent = false
       })
       eventBus.$on('loadAgencies', () => {
         this.showAppointmentsComponent = false
@@ -55,6 +60,7 @@
         this.showNotificationsComponent = false
         this.showPasswordComponent = false
         this.showUserComponent = false
+        this.showLanguageComponent = false
       })
       eventBus.$on('loadNotifications', () => {
         this.showAppointmentsComponent = false
@@ -62,6 +68,7 @@
         this.showNotificationsComponent = true
         this.showPasswordComponent = false
         this.showUserComponent = false
+        this.showLanguageComponent = false
       })
       eventBus.$on('changePassword', () => {
         this.showAppointmentsComponent = false
@@ -69,6 +76,7 @@
         this.showNotificationsComponent = false
         this.showPasswordComponent = true
         this.showUserComponent = false
+        this.showLanguageComponent = false
       }),
         eventBus.$on('manageUsers', () => {
         this.showAppointmentsComponent = false
@@ -76,7 +84,16 @@
         this.showNotificationsComponent = false
         this.showPasswordComponent = false
         this.showUserComponent = true
-      })
+          this.showLanguageComponent = false
+      }),
+        eventBus.$on('manageLanguages', () => {
+          this.showAppointmentsComponent = false
+          this.showTaComponent = false
+          this.showNotificationsComponent = false
+          this.showPasswordComponent = false
+          this.showUserComponent = false
+          this.showLanguageComponent = true
+        }) 
     },
 
     methods: {
