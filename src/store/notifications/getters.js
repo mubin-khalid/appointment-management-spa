@@ -4,5 +4,8 @@ export default {
   },
   total: state => {
     return state.notifications.total
+  },
+  notificationSettings: state => {
+    return state.notificationSettings
   }
 }

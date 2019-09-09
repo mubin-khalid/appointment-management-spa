@@ -8,7 +8,7 @@
       <notifications v-if="showNotificationsComponent"></notifications>
       <password v-if="showPasswordComponent"></password>
       <manage-users v-if="showUserComponent"></manage-users>
-      <languages v-if="showLanguageComponent"></languages>
+      <lt v-if="showLanguageComponent"></lt>
     </div>
   </main>
 
@@ -22,7 +22,7 @@
   import Notifications from './Notifications'
   import Password from './Password'
   import ManageUsers from './ManageUsers'
-  import Languages from './Languages'
+  import LT from './LT'
 
   export default {
     name: "Settings",
@@ -33,7 +33,7 @@
       Notifications,
       Password,
       ManageUsers,
-      Languages
+      'lt': LT
     },
     data(){
       return {

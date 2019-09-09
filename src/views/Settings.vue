@@ -1,11 +1,11 @@
 <template>
   <main class="w-full mt-10">
     <side-bar></side-bar>
-    <div class="float-right mr-10 w-3/4 -mt-48 relative">
+    <div class="float-right mr-10 w-3/4 -mt-48 relative bg-white rounded">
       <appointments v-if="showAppointmentsComponent"></appointments>
-      
+
       <translation-agencies v-if="showTaComponent"></translation-agencies>
-      <notifications v-if="showNotificationsComponent"></notifications>
+      <notification v-if="showNotificationsComponent"></notification>
       <password v-if="showPasswordComponent"></password>
     </div>
   </main>
@@ -16,8 +16,8 @@
 <script>
   import SidebarComponent from '../components/SidebarComponent'
   import Appointments from './Appointments'
-import TranslationAgencies from './TranslationAgencies'
-  import Notifications from './Notifications'
+  import TranslationAgencies from './TranslationAgencies'
+  import Notification from './Notification'
   import Password from './Password'
 
   export default {
@@ -26,10 +26,10 @@ import TranslationAgencies from './TranslationAgencies'
       'side-bar': SidebarComponent,
       'appointments': Appointments,
       TranslationAgencies,
-      Notifications,
+      Notification,
       Password
     },
-    data(){
+    data() {
       return {
         showAppointmentsComponent: true,
         showTaComponent: false,
@@ -37,13 +37,13 @@ import TranslationAgencies from './TranslationAgencies'
         showPasswordComponent: false
       }
     },
-    created(){
+    created() {
       eventBus.$on('loadAppointments', () => {
-      this.showAppointmentsComponent = true
+        this.showAppointmentsComponent = true
         this.showTaComponent = false
         this.showNotificationsComponent = false
         this.showPasswordComponent = false
-    })
+      })
       eventBus.$on('loadAgencies', () => {
         this.showAppointmentsComponent = false
         this.showTaComponent = true
@@ -63,9 +63,8 @@ import TranslationAgencies from './TranslationAgencies'
         this.showPasswordComponent = true
       })
     },
-  
-    methods: {
-    }
+
+    methods: {}
   }
 </script>
 
