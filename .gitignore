@@ -20,3 +20,4 @@ yarn-error.log*
 *.sln
 *.sw?
 vue.config.js.bck
+/vue.config.js
