@@ -62,7 +62,7 @@
                     class="px-2 -mx-2 py-1 transition-fast relative block hover:translate-r-2px">
                     <span class="rounded absolute inset-0 bg-teal-200 opacity-0"></span>
                     <span
-                      class="relative hover:text-gray-900 text-gray-600 font-medium cursor-pointer hover:font-bold hover:text-teal-600" @click="manageLanguages">Manage Languages/Templates</span>
+                      class="relative hover:text-gray-900 text-gray-600 font-medium cursor-pointer hover:font-bold hover:text-teal-600" @click="manageLanguages">Languages/Templates</span>
                   </span>
                 </li>
                 <li class="mb-3 lg:mb-1">
