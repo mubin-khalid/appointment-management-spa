@@ -7,5 +7,8 @@ export default {
   },
   totalLanguagesWithTemplates: state => {
     return state.totalLanguagesWithTemplates
+  },
+  getPaginatedLanguages: state => {
+    return state.paginatedLanguages
   }
 }

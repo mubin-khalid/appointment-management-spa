@@ -1,5 +1,6 @@
 <template>
   <div class="m-auto bg-white p-6 rounded shadow shadow-2xl shadow-md">
+    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <form class="w-full max-w-lg" @submit.prevent>
       <div class="flex flex-wrap -mx-3">
         <div class="w-full px-3 md:mb-2 mb-2">
@@ -45,20 +46,20 @@
         </div>
       </div>
       <!--<div class="flex flex-wrap -mx-3">-->
-        <!--<div class="w-full px-3 md:mb-2 mb-2">-->
-          <!--<label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="department">-->
-            <!--Department-->
-          <!--</label>-->
-          <!--<select-->
-            <!--class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"-->
-            <!--id="department" v-model="department"-->
-          <!--&gt;-->
-            <!--<option value="0">Select Department</option>-->
-            <!--<option v-for="department in departments" :key="department.id" :id="department.id" :value="department.id">-->
-              <!--{{ department.name }}-->
-            <!--</option>-->
-          <!--</select>-->
-        <!--</div>-->
+      <!--<div class="w-full px-3 md:mb-2 mb-2">-->
+      <!--<label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="department">-->
+      <!--Department-->
+      <!--</label>-->
+      <!--<select-->
+      <!--class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"-->
+      <!--id="department" v-model="department"-->
+      <!--&gt;-->
+      <!--<option value="0">Select Department</option>-->
+      <!--<option v-for="department in departments" :key="department.id" :id="department.id" :value="department.id">-->
+      <!--{{ department.name }}-->
+      <!--</option>-->
+      <!--</select>-->
+      <!--</div>-->
       <!--</div>-->
 
       <div class="flex flex-wrap -mx-3 mb-6">
@@ -78,14 +79,14 @@
             class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"
             id="ta" v-model="ta"
           >
-<!--            <option value="0">Select Agency</option>-->
+            <!--            <option value="0">Select Agency</option>-->
             <option v-for="agency in user.translation_agencies" :key="agency.id" :value="agency.id">
               {{ agency.name }}
             </option>
           </select>
         </div>
       </div>
-      
+
       <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full px-3  md:mb-0">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -93,14 +94,14 @@
             Message
           </label>
           <div name="message" id="message" cols="55" rows="10"
-                    class="appearance-none block w-full bg-gray-200 text-gray-700 hover:border-gray-500 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 resize-none"
-                    v-html="message"></div>
+               class="appearance-none block w-full bg-gray-200 text-gray-700 hover:border-gray-500 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 resize-none"
+               v-html="message"></div>
         </div>
       </div>
       <div class="flex flex-wrap -mx-3 mb-3">
         <div class="w-full px-3 mb-6 md:mb-0">
           <button
-            class="w-full appearance-none block w-full bg-blue-500 text-white border rounded hover:border-blue-900 py-3 px-4 mb-3 leading-tight"
+            class="w-full appearance-none block w-full bg-blue-500 text-white border rounded hover:border-blue-900 py-3 px-4 mb-3 leading-tight focus:outline-none"
             @click="saveAppointment">Send
           </button>
         </div>
@@ -112,12 +113,15 @@
 <script>
   import LanguageComponent from '../components/LanguageComponent'
   import Popup from '@/mixins/Popup'
+  import VueElementLoading from 'vue-element-loading'
   import {mapActions, mapGetters} from 'vuex'
+
   export default {
     name: "send-invite",
     mixins: [Popup],
     components: {
-      'language': LanguageComponent
+      'language': LanguageComponent,
+      VueElementLoading,
     },
     computed: {
       ...mapGetters({
@@ -130,18 +134,18 @@
         page: 0,
         all: true
       }),
-      
-      eventBus.$on('languageChanged', (payload) => {
-        this.language = payload.languageId
-        this.getTemplate({
-          language: payload.languageId,
-          appointment_date: this.date,
-          appointment_time: this.time,
-          template_type: 'register'
-        }).then((template) => {
-          this.message = template
+
+        eventBus.$on('languageChanged', (payload) => {
+          this.language = payload.languageId
+          this.getTemplate({
+            language: payload.languageId,
+            appointment_date: this.date,
+            appointment_time: this.time,
+            template_type: 'register'
+          }).then((template) => {
+            this.message = template
+          })
         })
-      })
     },
     data() {
       return {
@@ -155,13 +159,14 @@
         bokn: '',
         ta: 1,
         message: '',
+        show: false
       }
     },
     methods: {
       ...mapActions('client', [
         'retrieveClients'
       ]),
-      
+
       ...mapActions('appointment', [
         'save'
       ]),
@@ -172,6 +177,7 @@
         console.log('sending invite')
       },
       loadTemplate() {
+        this.show = true
         this.getTemplate({
           language: this.language,
           appointment_date: this.date,
@@ -179,21 +185,23 @@
           template_type: 'register'
         }).then((template) => {
           this.message = template
+          this.show = false
         })
       },
       saveAppointment() {
-        if(this.client == 0) {
+        if (this.client == 0) {
           this.popup('Please select Patient', 'error', 2000)
           return
         }
-        if(this.language == 0) {
+        if (this.language == 0) {
           this.popup('Please select Language', 'error', 2000)
           return
         }
-        if(this.bokn == 0) {
+        if (this.bokn == 0) {
           this.popup('Please enter BOKN.', 'error', 2000)
           return
         }
+        this.show = true
         this.save({
           client_id: this.client,
           // department_id: this.department,
@@ -205,8 +213,19 @@
           appointment_time: this.time,
           ta: this.ta,
           message: this.message
-        }).then( () => {
+        }).then(() => {
           this.popup('Appointment booked', 'success', 2000)
+          this.show = false
+          this.language = '0'
+          this.date = new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
+            new Date().getDate()).slice(-2)
+          this.time = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" + new Date().getMinutes()).slice(-2) +
+            ':00'
+          this.client = '0'
+          this.department = '0'
+          this.bokn = ''
+          this.ta = 1
+          this.message = ''
         })
       }
     },

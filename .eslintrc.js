@@ -13,5 +13,11 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint'
+  },
+  globals: {
+    '_': true,
+    '__': true,
+    'eventBus': true,
+    'index': true
   }
 }
