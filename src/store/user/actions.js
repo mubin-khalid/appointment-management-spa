@@ -31,6 +31,22 @@ export default {
         console.log(error.message)
       })
   },
+  updatePassword(context, payload) {
+    return Request({
+      method: 'put',
+      endpoint: 'users/' + payload.id,
+      data: payload,
+      isDataRaw: true
+    }).then(response => {
+      if(response.status == 'success') {
+        return response
+      }
+      throw new Error()
+    })
+      .catch(() => {
+        throw new Error('Old password not correct')
+      })
+  },
   addUser(context, payload) {
     return Request({
       method: 'post',
