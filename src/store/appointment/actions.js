@@ -8,7 +8,7 @@ export default {
     }
     return Request({
       method: 'get',
-      endpoint: 'appointments/?page_number=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '&all=' + all
+      endpoint: 'appointments?page_number=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '&all=' + all
     })
       .then(response => {
         context.commit('appointments', response.data)
@@ -38,21 +38,19 @@ export default {
       method: 'get',
       endpoint: 'appointment/' + payload.id,
     })
-    .then(response => {
-      return response
+      .then(response => {
+        return response
       })
-    .catch(error => {
+      .catch(error => {
         return error.message
       })
-  
+
   },
   cancel: (context, payload) => {
     return Request({
       method: 'put',
       endpoint: 'appointment/' + payload.id,
-      data: {
-        'cancelled_by': payload.cancelled_by,
-      },
+      data: payload,
       isDataRaw: true
     }).then(response => {
       if (typeof payload.index !== 'undefined') {
@@ -62,6 +60,33 @@ export default {
     })
       .catch(error => {
         return error.message
+      })
+  },
+
+  suggestTime: (context, payload) => {
+    return Request({
+      method: 'put',
+      endpoint: 'appointment/' + payload.id,
+      data: payload,
+      isDataRaw: true
+    }).then(() => {
+      return true
+    })
+      .catch(() => {
+        throw new Error('Processing failed.')
+      })
+  },
+  sendReminder: (context, payload) => {
+    return Request({
+      method: 'post',
+      endpoint: 'push-notification',
+      data: payload,
+      isDataRaw: true
+    }).then(() => {
+      return true
+    })
+      .catch(() => {
+        throw new Error('Processing failed.')
       })
   },
 }

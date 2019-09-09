@@ -48,12 +48,12 @@
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
         >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
-          <input v-if="appointment.reminder_sent != '1'"
-                 type="button"
-                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"
-                 value="Send"
-                 :id="appointment.id" @click="sendReminder(appointment)"
-          >
+<!--          <input v-if="appointment.reminder_sent != '1'"-->
+<!--                 type="button"-->
+<!--                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"-->
+<!--                 value="Send"-->
+<!--                 :id="appointment.id" @click="sendReminder(appointment)"-->
+<!--          >-->
         </div>
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
           <input
@@ -62,13 +62,13 @@
             value="View"
             :id="appointment.id" @click="showAlert(appointment)"
           >
-          <input
-            type="button"
-            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"
-            value="Cancel"
-            :id="appointment.id"
-            @click="cancelAppointment(appointment.id, index)"
-          >
+<!--          <input-->
+<!--            type="button"-->
+<!--            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"-->
+<!--            value="Cancel"-->
+<!--            :id="appointment.id"-->
+<!--            @click="cancelAppointment(appointment.id, index)"-->
+<!--          >-->
         </div>
       </div>
     </div>
