@@ -5,7 +5,8 @@ import Login from '@/views/Login';
 import Settings from '@/views/Settings';
 import SendInvite from '@/views/SendInvite';
 import NotFound from '@/views/404';
-import Appointment from '@/views/Appointment';
+import Appointment from '@/views/guest/Appointment';
+import Suggestions from '@/views/guest/Suggestions';
 import Admin from '@/views/admin/Admin';
 
 const routes = [
@@ -71,8 +72,16 @@ const routes = [
       requiresAuth: false, layout: 'guest-appointment'
     }
   },
-  { path: '/404', component: NotFound, 'name': 'NotFound' },
-  { path: '*', redirect: '/404' },
+  {
+    path: '/appointment/:id/suggestions',
+    name: 'suggestion',
+    component: Suggestions,
+    meta: {
+      requiresAuth: false, layout: 'guest-appointment'
+    }
+  },
+  {path: '/404', component: NotFound, 'name': 'NotFound'},
+  {path: '*', redirect: '/404'},
 ]
 
 export default routes

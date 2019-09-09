@@ -4,8 +4,8 @@
     id="language"
     @change="languageChanged($event)"
   >
-    <option value="0">Please Select</option>
-    <option v-for="language in languages" :id="language.id" :value="language.id">{{
+    <option value="0" selected disabled>Please Select</option>
+    <option v-for="language in languages" :key="language.id" :id="language.id" :value="language.id">{{
       language.language
       }}
     </option>

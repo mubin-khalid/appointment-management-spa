@@ -1,5 +1,6 @@
 <template>
   <div class="w-full">
+    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Appointments</h2>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
@@ -49,10 +50,10 @@
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
         >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
           <input v-if="appointment.reminder_sent != '1'"
-            type="button"
-            class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"
-            value="Send"
-            :id="appointment.id" @click="sendReminder(appointment)"
+                 type="button"
+                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"
+                 value="Send"
+                 :id="appointment.id" @click="reminder(appointment)"
           >
         </div>
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
@@ -106,6 +107,7 @@
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import Popup from '@/mixins/Popup'
   import {mapActions, mapGetters} from "vuex";
+  import VueElementLoading from 'vue-element-loading'
 
   export default {
     name: "Appointments",
@@ -114,17 +116,20 @@
       return {
         loading: false,
         page: 0,
+        show: false
       }
     },
     created() {
       this.loadAppointments({
         page: this.page,
         all: false,
+        show: false
       })
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
+      VueElementLoading,
     },
     computed: {
       ...mapGetters('appointment', {
@@ -136,6 +141,7 @@
       ...mapActions('appointment', [
         'loadAppointments',
         'cancel',
+        'sendReminder',
       ]),
       pageChange(page) {
         this.page = page;
@@ -148,24 +154,32 @@
         })
       },
       cancelAppointment(id, index) {
+        this.show = true
         this.cancel({
           id: id,
           cancelled_by: 'user',
           index: index
         }).then(() => {
           this.popup('Appointment Cancelled', 'success', 5000)
+          this.show = false
         }).catch(() => {
           this.popup('Unable to cancel it, please try later', 'error', 3000)
+          this.show = false
         })
       },
-      sendReminder(appointment) {
-          this.$store.dispatch('sendReminder', {
-            'notification_type': 'email',
-            'appointment_id': appointment.id
-          }).then( () => {
-            this.popup('Reminder Sent', 'success', 2000)
-            appointment.reminder_sent = 1
-          })
+      reminder(appointment) {
+        this.show = true
+        this.sendReminder({
+          'notification_type': 'email',
+          'appointment_id': appointment.id
+        }).then(() => {
+          this.popup('Reminder Sent', 'success', 2000)
+          this.show = false
+          appointment.reminder_sent = 1
+        }).catch(() => {
+          this.popup('Unable to sent reminder', 'error', 2000)
+          this.show = false
+        })
       },
       showAlert(appointment) {
         this.$swal({

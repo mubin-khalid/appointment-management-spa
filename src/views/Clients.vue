@@ -35,7 +35,7 @@
              class="appearance-none border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none mb-2"
              placeholder="Search" v-model="searchClients">
     </form>
-    <div class="table w-full py-2 shadow-2xl rounded bg-white">
+    <div class="table w-full py-2 shadow-2xl rounded bg-white text-center">
       <div class="table-row flex p-4 rounded">
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex" title="Double click to edit">Name
         </div>
@@ -52,14 +52,14 @@
       >
         <div class="bg-white">
           <div
-            class="table-cell bg-white text-gray-700 px-4 py-2 text-md-center"
+            class="bg-white text-gray-700 px-4 py-2 text-md-center text-center"
             v-if="!client.editing"
             @dblclick="edit(index)"
           >{{ client.name}}
           </div>
           <input
             v-else
-            class="appearance-none table-cell border-none bg-white text-gray-700 px-4 py-2 text-sm leading-tight focus:outline-none"
+            class="appearance-none text-center table-cell border-none bg-white text-gray-700 px-4 py-2 text-sm leading-tight focus:outline-none"
             type="text"
             v-model="alteredName"
             @blur="doneEdit(index)"
@@ -73,7 +73,7 @@
         >{{ client.email }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex text-center"
         >{{ client.phone }}
         </div>
         <!--<div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">-->
@@ -84,25 +84,24 @@
         <!--:id="client.id"-->
         <!--&gt;-->
         <!--</div>-->
-        <div class="table-cell bg-white text-gray-700 px-2 py-2 text-sm flex w-2/12">
-          <input
-            type="button"
-            class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer mx-2"
+        <div class="table-cell bg-white text-gray-700 px-2 py-2 text-sm flex w-2/12 text-center">
+          <span
+            class="cursor-pointer mx-2 text-blue-500 fa fa-edit"
             value="Edit"
             :id="client.id"
             @click="showEdit(client)"
-          >
+          ></span>
           <span
-            class="cursor-pointer mx-2"
+            class="cursor-pointer mx-2 text-red-500 fa fa-trash"
             :title=" 'Delete ' + client.name"
             :id="client.id"
             @click="deleteClient(client.id, index)"
           >
-            &times;
           </span>
         </div>
       </div>
     </div>
+    
     <edit-client v-if="editClient" :name="client.name" :email="client.email" :phone="client.phone"
                  @keyup.esc="cancelEditClient"
     ></edit-client>
@@ -136,13 +135,15 @@
 </template>
 
 <script>
-  import EditClient from '@/components/EditClientComponent'
+  import EditClientComponent from '../components/EditClientComponent'
+  import LanguageComponent from '../components/LanguageComponent'
   import Popup from '@/mixins/Popup'
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
 
   import {mapActions, mapGetters} from "vuex";
+  
   /* eslint-disable */
   export default {
     name: "clients",
@@ -160,9 +161,6 @@
         loading: false,
         page: 0,
       };
-    },
-    components: {
-      'edit-client': EditClient,
     },
     created() {
       this.retrieveClients({
@@ -193,6 +191,7 @@
     components: {
       VueAdsPagination,
       VueAdsPageButton,
+      'edit-client': EditClientComponent,
     },
     directives: {
       focus: {

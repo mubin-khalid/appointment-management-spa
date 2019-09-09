@@ -1,6 +1,5 @@
 <template>
   <div class="w-full">
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Notifications</h2>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
@@ -35,7 +34,8 @@
         >{{ notification.type }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex capitalize"
+          :class="notification.notification_type == 'cancel' ? 'text-red-500' : ''"
         >{{ notification.notification_type }}
         </div>
       </div>

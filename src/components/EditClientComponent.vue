@@ -36,7 +36,7 @@
 <script>
   /* eslint-disable */
   export default {
-    name: 'EditClient',
+    name: "edit-client",
     props: {
       name: {
         type: String,
