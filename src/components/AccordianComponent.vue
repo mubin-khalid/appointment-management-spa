@@ -57,10 +57,10 @@
 </script>
 
 <style scoped>
-  .accordion._1 {
+  .accordion._1, .accordion._0 {
     background-color: #f36b6b;
   }
-  .accordion._1 .body {
+  .accordion._1 .body, .accordion._0 .body {
     border-color: #f36b6b;
   }
   .accordion._2 {
