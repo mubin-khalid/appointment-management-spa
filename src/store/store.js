@@ -12,26 +12,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   plugins: [createPersistedState()],
-  //actions: {
-    // sendReminder: (context, payload) => {
-    //   axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-    //   if (context.getters.loggedIn) {
-    //     return new Promise((resolve, reject) => {
-    //       axios.post('/push-notification', payload)
-    //         .then(response => {
-    //           resolve(response)
-    //         })
-    //         .catch(error => {
-    //           console.log(error.methods)
-    //           reject(error)
-    //         })
-    //     })
-    //   }
-    // },
-    //  Admin
-
-    
- // },
   modules: {
     auth,
     client,
