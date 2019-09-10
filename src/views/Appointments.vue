@@ -14,8 +14,7 @@
       </div>
       <div
         class="table-row flex p-4 border border-black text-center"
-        v-if="total > 0"
-        v-for="(appointment, index) in appointments"
+        v-for="(appointment, index) in filteredAppointment"
         :key="appointment.id"
         :id="appointment.id"
       >
@@ -72,6 +71,7 @@
           >
         </div>
       </div>
+      
     </div>
     <vue-ads-pagination
       :total-items="total? total : 1"
@@ -135,7 +135,13 @@
       ...mapGetters('appointment', {
         appointments: 'appointments',
         total: 'total'
-      })
+      }),
+      filteredAppointment: function () {
+        if(this.total > 0) {
+          return this.appointments
+        }
+        return {}
+      }
     },
     methods: {
       ...mapActions('appointment', [
