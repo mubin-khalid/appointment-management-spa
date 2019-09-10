@@ -15,7 +15,7 @@ export default {
       return (response)
     })
       .catch(error => {
-        console.log(error.message)
+        return (error.message)
       })
   },
   deleteUser(context, payload) {
@@ -28,7 +28,7 @@ export default {
       return (response)
     })
       .catch(error => {
-        console.log(error.message)
+        return (error.message)
       })
   },
   updatePassword(context, payload) {
@@ -58,8 +58,7 @@ export default {
       return (response)
     })
       .catch(error => {
-        
-        console.log(error)
+        error.message
       })
   },
 }
