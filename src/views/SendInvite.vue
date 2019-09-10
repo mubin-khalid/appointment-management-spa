@@ -173,9 +173,7 @@
       ...mapActions('language', [
         'getTemplate'
       ]),
-      sendInvite() {
-        console.log('sending invite')
-      },
+      
       loadTemplate() {
         this.show = true
         this.getTemplate({

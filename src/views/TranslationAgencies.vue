@@ -148,7 +148,7 @@
           email: this.email,
           phone: this.phone,
           fax: this.fax
-        }).then(_ => {
+        }).then(() => {
           this.popup('Agency Added successfully.', 'success', 2000)
           this.name = ''
           this.email = ''

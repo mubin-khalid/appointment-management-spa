@@ -38,7 +38,7 @@ export default {
       data: payload,
       isDataRaw: true
     }).then(response => {
-      if(response.status == 'success') {
+      if (response.status == 'success') {
         return response
       }
       throw new Error()
@@ -58,7 +58,8 @@ export default {
       return (response)
     })
       .catch(error => {
-        console.log(error.methods)
+        
+        console.log(error)
       })
   },
 }

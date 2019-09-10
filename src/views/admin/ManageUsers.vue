@@ -38,14 +38,23 @@
           aria-label="facility"
           v-model="facility"
         >
+        <span class="font-hairline text-gray-700 mr-2">
+          Licensed
+        </span>
         <input type="checkbox" title="Licensed Client" aria-label="facility" class="mr-8" v-model="licensed">
+
+        <span class="font-hairline text-gray-700 mr-2">
+          Admin
+        </span>
+        <input type="checkbox" title="Admin" aria-label="Admin" class="mr-8" v-model="isAdmin">
+
+
         <button
           class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
           type="submit"
         >Add
         </button>
       </div>
-      {{licensed}}
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
@@ -54,6 +63,7 @@
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Phone</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Facility</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Licensed Client</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Admin</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
       </div>
       <div
@@ -82,7 +92,12 @@
 
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >No
+        > {{user.licensed ? 'Yes': 'No'}}
+        </div>
+
+        <div
+          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+        > {{user.is_admin ? 'Yes': 'No'}}
         </div>
 
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex rounded">
@@ -144,7 +159,8 @@
         phone: '',
         password: '',
         facility: '',
-        licensed: false
+        licensed: false,
+        isAdmin: false,
       }
     },
     created() {
@@ -184,16 +200,18 @@
           email: this.email,
           phone: this.phone,
           facility: this.facility,
-          licensed: this.licensed,
+          licensed: this.licensed? 1 : 0,
+          is_admin: this.isAdmin ? 1 : 0,
         }).then( () =>  {
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
           this.name = this.password = this.email = this.phone = this.facility = ''
+          this.licensed = this.isAdmin = false
         }).catch( () => {
           this.popup('Unable to add user.', 'error', 2000)
         })
       },
 // eslint-disable-next-line no-unused-vars
-      rangeChange(_, __) {
+      rangeChange() {
         this.getUsers({
           page: this.page
         })

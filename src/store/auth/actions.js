@@ -14,7 +14,6 @@ export default {
       return true
     })
       .catch(error => {
-        console.warn(error.message)
         return false
       })
   },
@@ -33,7 +32,6 @@ export default {
       .catch(error => {
         localStorage.removeItem('access_token')
         commit('logout')
-        console.log(error.message)
       })
   },
   getUser: context => {

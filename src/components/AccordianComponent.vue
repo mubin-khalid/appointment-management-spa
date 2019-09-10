@@ -31,15 +31,6 @@
       toggle: function() {
         this.show = !this.show;
       },
-      toggleSwitch(event) {
-        console.log(event)
-      },
-      // enter: function(el, done) {
-      //   $(el).slideDown(150, done);
-      // },
-      // leave: function(el, done) {
-      //   $(el).slideUp(150, done);
-      // },
       beforeEnter: function(el) {
         el.style.height = '0';
       },
@@ -121,10 +112,6 @@
   .accordion .header-icon.rotate {
     transform: rotate(180deg);
     transition-duration: 0.3s;
-  }
-
-  .accordion.purple {
-    background-color: #8c618d;
   }
 
   .accordion.purple .body {

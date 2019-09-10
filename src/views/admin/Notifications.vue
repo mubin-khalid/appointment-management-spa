@@ -109,7 +109,7 @@
         this.page = page;
       },
 
-      rangeChange(_, __) {
+      rangeChange() {
         this.loadNotifications({
           page: this.page,
           all: true,
