@@ -13,7 +13,7 @@ export default {
       context.commit('setToken', token)
       return true
     })
-      .catch(error => {
+      .catch(() => {
         return false
       })
   },
@@ -29,7 +29,7 @@ export default {
 
       return response.data
     })
-      .catch(error => {
+      .catch(() => {
         localStorage.removeItem('access_token')
         commit('logout')
       })

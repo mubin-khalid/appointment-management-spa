@@ -15,17 +15,17 @@ export default {
       return (response)
     })
       .catch(error => {
-        console.log(error.methods)
+        return (error.methods)
       })
   },
-  
+
   store(context, payload) {
     return Request({
       method: 'post',
       endpoint: 'ta',
       data: payload,
       isDataRaw: true
-    }).then( (response) => {
+    }).then((response) => {
       context.commit('addTa', response.data)
       return response.data
     })
