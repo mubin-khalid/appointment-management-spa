@@ -1,5 +1,6 @@
 <template>
   <div class="w-1/4 m-auto">
+    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <div class="w-full max-w-xs text-center mt-8">
       <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="attemptLogin">
         <div class="mb-4">
@@ -36,11 +37,16 @@
 <script>
   import Popup from '@/mixins/Popup'
   import {mapActions, mapMutations} from 'vuex'
+  import VueElementLoading from 'vue-element-loading'
   export default {
     name: "login",
     mixins: [Popup],
+    components: {
+      VueElementLoading
+    },
     data() {
       return {
+        show: false,
         username: '',
         password: ''
       }
@@ -58,28 +64,26 @@
           this.popup('Please fill-in all fields.', 'error', 3000)
           return;
         }
+        this.show = true
         this.login({
           username: this.username,
           password: this.password,
         })
-        // this.$store.dispatch('retrieveToken', {
-        //   username: this.username,
-        //   password: this.password,
-        // })
           .then(response => {
-            console.log(response)
             if(!response) {
               this.popup('Invalid Credentials', 'error', 3000)
               this.password = ''
+              this.show = false
               return
             }
+            this.show = false
             this.popup('Logged in successfully', 'success', 2000)
-            this.getUser().then(_ => {
-              console.log(this.$store.getters['auth/isAdmin'])
+            this.getUser().then(() => {
               this.$router.push({name: 'invite'})
             })
           })
           .catch(error => {
+            this.show = false
             this.popup(error.response.data.message, 'error', 3000)
             this.password = ''
           })
