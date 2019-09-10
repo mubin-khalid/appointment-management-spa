@@ -55,6 +55,7 @@
         >Add
         </button>
       </div>
+      {{licensed}}
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
