@@ -1,5 +1,6 @@
 <template>
   <div class="w-full">
+    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Users</h2>
     <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addUser">
       <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
@@ -55,7 +56,6 @@
         >Add
         </button>
       </div>
-      {{licensed}}
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
@@ -146,6 +146,7 @@
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import Popup from '../../mixins/Popup'
+  import VueElementLoading from 'vue-element-loading'
   import {mapActions, mapGetters} from "vuex";
 
   export default {
@@ -162,6 +163,7 @@
         facility: '',
         licensed: false,
         isAdmin: false,
+        show: false,
       }
     },
     created() {
@@ -170,6 +172,7 @@
     components: {
       VueAdsPagination,
       VueAdsPageButton,
+      VueElementLoading,
     },
     computed: {
       ...mapGetters('user', [
@@ -192,9 +195,13 @@
           index: index
         }).then(() => {
           this.popup('User: ' + user.name + ' deleted.', 'success', 2000)
+        }).catch((error) => {
+          this.show = false
+          this.popup(error.message, 'error', 2000)
         })
       },
       addUser() {
+        this.show = true
         this.add({
           name: this.name,
           password: this.password,
@@ -207,8 +214,11 @@
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
           this.name = this.password = this.email = this.phone = this.facility = ''
           this.licensed = this.isAdmin = false
-        }).catch( () => {
-          this.popup('Unable to add user.', 'error', 2000)
+          this.show = false
+        }).catch((error) => {
+          this.show = false
+          console.log(error)
+          this.popup(error.message, 'error', 2000)
         })
       },
 // eslint-disable-next-line no-unused-vars
