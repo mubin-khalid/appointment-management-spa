@@ -14,8 +14,8 @@ export default {
       context.commit('setUsers', response.data)
       return (response)
     })
-      .catch(error => {
-        return (error.message)
+      .catch(() => {
+        throw new Error()
       })
   },
   deleteUser(context, payload) {
@@ -57,8 +57,8 @@ export default {
       context.commit('addUser', response.data)
       return (response)
     })
-      .catch(error => {
-        error.message
+      .catch((response) => {
+        return Promise.reject(response)
       })
   },
 }
