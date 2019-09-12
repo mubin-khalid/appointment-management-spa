@@ -28,7 +28,7 @@ const routes = [
     }
   },
   {
-    path: '/settings',
+    path: '/dashboard',
     component: Settings,
     name: 'settings',
     meta: {
