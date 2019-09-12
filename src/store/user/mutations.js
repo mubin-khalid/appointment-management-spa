@@ -5,7 +5,7 @@ export default {
     state.admin.users.total -= 1
   },
   addUser: (state, user) => {
-    state.admin.users.push(user)
+    state.admin.users.users.push(user)
     state.admin.users.total += 1
   }
 }

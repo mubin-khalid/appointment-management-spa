@@ -6,7 +6,7 @@
       </div>
       <div class="w-1/2">
         <button id="show-modal" class='bg-teal-600 float-right font-bold h-auto mt-0 mb-2 rounded text-white'
-                @click="showModal = true"><span 
+                @click="showModal = true"><span
           class="bg-teal-600 cursor-pointer fa fa-plus px-5 py-2 rounded text-white"></span>
         </button>
       </div>
@@ -26,8 +26,7 @@
                     @change="updateTemplateTypes"
             >
               <option value="null" disabled selected>Choose Language</option>
-              <option v-for="(language, langIndex) in languages" :key="'language' + language.language.id"
-                      v-if="language.language.implemented < 3"
+              <option v-for="(language) in languagesForTemplates" :key="'language' + language.language.id"
                       :value="language.language.id"
                       class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
 
@@ -42,7 +41,7 @@
           >
             <select name="template_type" id="template_type"
                     class="capitalize appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-            v-model="selectedTemplateType"
+                    v-model="selectedTemplateType"
             >
               <option value="null" disabled selected>Choose Template Type</option>
               <option v-for="(templateType, index) in templateTypes" :key="'template-' + index"
@@ -179,8 +178,19 @@
     computed: {
       ...mapGetters('language', {
         languages: 'getLanguagesWithTemplates',
-        total: 'totalLanguagesWithTemplates'
-      })
+        total: 'totalLanguagesWithTemplates',
+      }),
+      languagesForTemplates: function () {
+        let filteredLanguages = {}
+        Object.keys(this.languages).map(
+          (index) => {
+            if (this.languages[index].language.implemented < 3) {
+              filteredLanguages[index] = this.languages[index]
+            }
+          }
+        )
+        return filteredLanguages
+      }
     },
     methods: {
       ...mapActions('language', {
@@ -243,7 +253,7 @@
           templateIndex: this.templateIndex
         })
       },
-      addTemplate(){
+      addTemplate() {
         this.showModal = false
         this.createTemplate({
           language_id: this.selectedLanguage,
@@ -251,10 +261,10 @@
           template: this.newTemplate
         })
       },
-      deleteTemplate(languageIndex, templateIndex){
+      deleteTemplate(languageIndex, templateIndex) {
         let template = this.languages[languageIndex].templates[templateIndex]
         this.removeTemplate({
-          languageIndex, 
+          languageIndex,
           templateIndex,
           'languageId': template.language_id,
           'id': template.id

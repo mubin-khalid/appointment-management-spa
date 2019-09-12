@@ -14,8 +14,8 @@ export default {
       context.commit('setUsers', response.data)
       return (response)
     })
-      .catch(error => {
-        console.log(error.message)
+      .catch(() => {
+        throw new Error()
       })
   },
   deleteUser(context, payload) {
@@ -28,7 +28,7 @@ export default {
       return (response)
     })
       .catch(error => {
-        console.log(error.message)
+        return (error.message)
       })
   },
   updatePassword(context, payload) {
@@ -38,7 +38,7 @@ export default {
       data: payload,
       isDataRaw: true
     }).then(response => {
-      if(response.status == 'success') {
+      if (response.status == 'success') {
         return response
       }
       throw new Error()
@@ -57,8 +57,8 @@ export default {
       context.commit('addUser', response.data)
       return (response)
     })
-      .catch(error => {
-        console.log(error.methods)
+      .catch((response) => {
+        return Promise.reject(response)
       })
   },
 }

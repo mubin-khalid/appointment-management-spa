@@ -13,8 +13,7 @@
       </div>
       <div
         class="table-row flex p-4 border border-black text-center"
-        v-if="total > 0"
-        v-for="(appointment, index) in appointments"
+        v-for="(appointment) in filteredAppointment"
         :key="appointment.id"
         :id="appointment.id"
       >
@@ -130,7 +129,13 @@
       ...mapGetters('appointment', {
         appointments: 'appointments',
         total: 'total'
-      })
+      }),
+      filteredAppointment: function () {
+        if(this.total > 0) {
+          return this.appointments
+        }
+        return {}
+      }
     },
     methods: {
       ...mapActions('appointment', [

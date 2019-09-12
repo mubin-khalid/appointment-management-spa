@@ -136,7 +136,6 @@
 
 <script>
   import EditClientComponent from '../components/EditClientComponent'
-  import LanguageComponent from '../components/LanguageComponent'
   import Popup from '@/mixins/Popup'
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'

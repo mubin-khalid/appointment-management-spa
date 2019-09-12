@@ -1,5 +1,6 @@
 <template>
   <div class="w-full">
+    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Users</h2>
     <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addUser">
       <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
@@ -38,14 +39,23 @@
           aria-label="facility"
           v-model="facility"
         >
+        <span class="font-hairline text-gray-700 mr-2">
+          Licensed
+        </span>
         <input type="checkbox" title="Licensed Client" aria-label="facility" class="mr-8" v-model="licensed">
+
+        <span class="font-hairline text-gray-700 mr-2">
+          Admin
+        </span>
+        <input type="checkbox" title="Admin" aria-label="Admin" class="mr-8" v-model="isAdmin">
+
+
         <button
           class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
           type="submit"
         >Add
         </button>
       </div>
-      {{licensed}}
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white">
       <div class="table-row flex p-4 rounded text-center">
@@ -54,6 +64,7 @@
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Phone</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Facility</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Licensed Client</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Admin</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
       </div>
       <div
@@ -82,7 +93,12 @@
 
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >No
+        > {{user.licensed ? 'Yes': 'No'}}
+        </div>
+
+        <div
+          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+        > {{user.is_admin ? 'Yes': 'No'}}
         </div>
 
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex rounded">
@@ -130,6 +146,7 @@
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import Popup from '../../mixins/Popup'
+  import VueElementLoading from 'vue-element-loading'
   import {mapActions, mapGetters} from "vuex";
 
   export default {
@@ -144,7 +161,9 @@
         phone: '',
         password: '',
         facility: '',
-        licensed: false
+        licensed: false,
+        isAdmin: false,
+        show: false,
       }
     },
     created() {
@@ -153,6 +172,7 @@
     components: {
       VueAdsPagination,
       VueAdsPageButton,
+      VueElementLoading,
     },
     computed: {
       ...mapGetters('user', [
@@ -175,25 +195,34 @@
           index: index
         }).then(() => {
           this.popup('User: ' + user.name + ' deleted.', 'success', 2000)
+        }).catch((error) => {
+          this.show = false
+          this.popup(error.message, 'error', 2000)
         })
       },
       addUser() {
+        this.show = true
         this.add({
           name: this.name,
           password: this.password,
           email: this.email,
           phone: this.phone,
           facility: this.facility,
-          licensed: this.licensed,
+          licensed: this.licensed? 1 : 0,
+          is_admin: this.isAdmin ? 1 : 0,
         }).then( () =>  {
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
           this.name = this.password = this.email = this.phone = this.facility = ''
-        }).catch( () => {
-          this.popup('Unable to add user.', 'error', 2000)
+          this.licensed = this.isAdmin = false
+          this.show = false
+        }).catch((error) => {
+          this.show = false
+          console.log(error)
+          this.popup(error.message, 'error', 2000)
         })
       },
 // eslint-disable-next-line no-unused-vars
-      rangeChange(_, __) {
+      rangeChange() {
         this.getUsers({
           page: this.page
         })

@@ -7,6 +7,7 @@ import SendInvite from '@/views/SendInvite';
 import NotFound from '@/views/404';
 import Appointment from '@/views/guest/Appointment';
 import Suggestions from '@/views/guest/Suggestions';
+import VerifyEmail from '@/views/guest/VerifyEmail';
 import Admin from '@/views/admin/Admin';
 
 const routes = [
@@ -76,6 +77,14 @@ const routes = [
     path: '/appointment/:id/suggestions',
     name: 'suggestion',
     component: Suggestions,
+    meta: {
+      requiresAuth: false, layout: 'guest-appointment'
+    }
+  },
+  {
+    path: '/:id/verify',
+    name: 'verify',
+    component: VerifyEmail,
     meta: {
       requiresAuth: false, layout: 'guest-appointment'
     }

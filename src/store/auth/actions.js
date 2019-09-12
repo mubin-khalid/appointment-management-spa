@@ -13,8 +13,7 @@ export default {
       context.commit('setToken', token)
       return true
     })
-      .catch(error => {
-        console.warn(error.message)
+      .catch(() => {
         return false
       })
   },
@@ -30,10 +29,9 @@ export default {
 
       return response.data
     })
-      .catch(error => {
+      .catch(() => {
         localStorage.removeItem('access_token')
         commit('logout')
-        console.log(error.message)
       })
   },
   getUser: context => {
