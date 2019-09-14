@@ -127,9 +127,13 @@
       ...mapGetters({
         clients: 'client/clients',
         user: 'auth/user',
+        isAdmin: 'auth/isAdmin'
       }),
     },
     created() {
+      if(this.isAdmin) {
+        this.$router.push({name: 'admin'})
+      }
       this.retrieveClients({
         page: 0,
         all: true

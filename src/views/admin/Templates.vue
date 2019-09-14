@@ -91,7 +91,7 @@
         <div class="w-1/3 p-2 border-teal-600" v-for="(template, ti) in language.templates"
              :key="template.id"
              :id="template.id"
-             :class="ti !== language.templates.length-1 ? 'border-r': ''"
+             :class="[(ti !== language.templates.length-1 ? 'border-r': ''), (ti > 2 ? 'border-t' : '')]"
         >
           <div class="flex">
             <p class="px-5 flex-1">Type: <span class="font-bold capitalize">{{template.template_type}}</span></p>
@@ -157,8 +157,15 @@
         newTemplate: null,
         templateTypes: [
           'cancel',
+          'client-cancelled-appointment',
           'register',
-          'reminder'
+          'reminder',
+        ],
+        defaultTemplateTypes: [
+          'cancel',
+          'client-cancelled-appointment',
+          'register',
+          'reminder',
         ],
         selectedLanguage: null,
         selectedTemplateType: null,
@@ -184,7 +191,7 @@
         let filteredLanguages = {}
         Object.keys(this.languages).map(
           (index) => {
-            if (this.languages[index].language.implemented < 3) {
+            if (this.languages[index].language.implemented < 4) {
               filteredLanguages[index] = this.languages[index]
             }
           }
@@ -204,10 +211,16 @@
         this.page = page;
       },
       updateTemplateTypes() {
+        this.templateTypes = [
+          'cancel',
+          'client-cancelled-appointment',
+          'register',
+          'reminder'
+        ]
         let languages = this.languages
         Object.keys(languages).forEach((v, k) => {
           if (languages[k].language.id == this.selectedLanguage) {
-            if (languages[k].language.implemented < 3 && typeof
+            if (languages[k].language.implemented < 4 && typeof
               languages[k].templates !== 'undefined') {
               let templates = languages[k].templates
               Object.keys(templates).forEach((t, tk) => {
@@ -219,6 +232,7 @@
             } else {
               this.templateTypes = [
                 'cancel',
+                'client-cancelled-appointment',
                 'register',
                 'reminder'
               ]
