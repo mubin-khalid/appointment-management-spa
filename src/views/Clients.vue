@@ -1,5 +1,6 @@
 <template>
-  <div id="clients" class="m-auto">
+  <div id="clients" class="bg-white m-auto rounded w-2/3">
+    <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
     <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addClient">
       <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
         <input
@@ -142,6 +143,7 @@
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
 
   import {mapActions, mapGetters} from "vuex";
+  import VueElementLoading from 'vue-element-loading'
   
   /* eslint-disable */
   export default {
@@ -149,6 +151,7 @@
     mixins: [Popup],
     data() {
       return {
+        show: false,
         name: "",
         email: "",
         phone: "",
@@ -170,6 +173,7 @@
         this.client.name = payload.name
         this.client.phone = payload.phone
         this.client.email = payload.email
+        this.show = true
         this.updateClientModal({
           name: payload.name,
           phone: payload.phone,
@@ -178,6 +182,7 @@
           ssn: null,
         }).then(() => {
           this.popup('Client Updated', 'success', 2000)
+          this.show = false
         })
       })
     },
@@ -191,6 +196,7 @@
       VueAdsPagination,
       VueAdsPageButton,
       'edit-client': EditClientComponent,
+      VueElementLoading,
     },
     directives: {
       focus: {
@@ -221,15 +227,23 @@
         if(this.searchClients != '') {
           this.performSearch()
         } else {
+          this.show = true
+          this.loading = true
           this.retrieveClients({
             page: this.page,
+          }).then(() => {
+            this.show = false
+            this.loading = false
           })
         }
       },
       performSearch() {
+        this.show = true
         this.search({
           keywords: this.searchClients,
           page: this.page
+        }).then(() => {
+          this.show = false
         })
       },
       showEdit(client) {
@@ -237,6 +251,7 @@
         this.editClient = true
       },
       addClient() {
+        this.show = true
         this.addNew({
           name: this.name,
           phone: this.phone,
@@ -246,8 +261,10 @@
           this.name = ''
           this.phone = ''
           this.email = ''
+          this.show = false
           this.popup('Client added', 'success', 2000)
         }).catch(() => {
+          this.show = false
           this.popup('Something went wrong', 'error', 3000)
         })
       },
@@ -265,6 +282,7 @@
           this.alteredName = this.cachedName
         } else if (this.clients[index].name != this.alteredName) {
           this.clients[index].name = this.alteredName
+          this.show = true
           this.updateClient({
             name: this.clients[index].name,
             phone: this.clients[index].phone,
@@ -273,6 +291,7 @@
             ssn: null,
             index: index
           }).then(() => {
+            this.show = false
             this.popup('Client Updated', 'success', 2000)
           })
         }
@@ -283,10 +302,12 @@
       },
 
       deleteClient(id, index) {
+        this.show = true
         this.delete({
           id: id,
           index: index
         }).then(() => {
+          this.show = false
           this.popup('Client Deleted', 'success', 2000)
         })
       }

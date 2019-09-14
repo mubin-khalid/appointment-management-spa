@@ -1,7 +1,7 @@
 <template>
-  <div class="antialiased font-sans w-full">
+  <div class="antialiased font-sans w-full mt-12">
     <div class="md:flex min-h-screen">
-      <div class="w-full md:w-1/2 bg-white flex items-center justify-center ">
+      <div class="w-full md:w-1/2 bg-gray-100 flex items-center justify-center ">
         <div class="max-w-sm m-8">
           <div class="text-black text-5xl md:text-15xl font-black">404</div>
           <div class="w-16 h-1 bg-purple-light my-3 md:my-6"></div>

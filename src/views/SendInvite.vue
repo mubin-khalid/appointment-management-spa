@@ -1,5 +1,5 @@
 <template>
-  <div class="m-auto bg-white p-6 rounded shadow shadow-2xl shadow-md">
+  <div class="bg-white m-auto p-6 rounded shadow-2xl w-1/3">
     <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
     <form class="w-full max-w-lg" @submit.prevent>
       <div class="flex flex-wrap -mx-3">
@@ -93,10 +93,10 @@
                  for="message">
             Message
           </label>
-          <div name="message" id="message" cols="55" rows="10"
-               class="appearance-none block w-full bg-gray-200 text-gray-700 hover:border-gray-500 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 resize-none"
-               v-html="message"></div>
+          <textarea name="message" id="message" cols="50" rows="4" maxlength="150" v-model="message"
+                    class="appearance-none block w-full bg-gray-200 focus:bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 resize-none"></textarea>
         </div>
+
       </div>
       <div class="flex flex-wrap -mx-3 mb-3">
         <div class="w-full px-3 mb-6 md:mb-0">

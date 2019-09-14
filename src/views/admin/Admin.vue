@@ -1,7 +1,7 @@
 <template>
-  <main class="w-full mt-10">
+  <main class="flex mt-8">
     <side-bar></side-bar>
-    <div class="float-right mr-10 w-3/4 -mt-48 relative">
+    <div class="flex-1 bg-white rounded mr-1">
       <appointments v-if="showAppointmentsComponent"></appointments>
 
       <translation-agencies v-if="showTaComponent"></translation-agencies>
@@ -35,7 +35,7 @@
       ManageUsers,
       'lt': LT
     },
-    data(){
+    data() {
       return {
         showAppointmentsComponent: true,
         showTaComponent: false,
@@ -45,7 +45,7 @@
         showLanguageComponent: false,
       }
     },
-    created(){
+    created() {
       eventBus.$on('loadAppointments', () => {
         this.showAppointmentsComponent = true
         this.showTaComponent = false
@@ -79,13 +79,13 @@
         this.showLanguageComponent = false
       }),
         eventBus.$on('manageUsers', () => {
-        this.showAppointmentsComponent = false
-        this.showTaComponent = false
-        this.showNotificationsComponent = false
-        this.showPasswordComponent = false
-        this.showUserComponent = true
+          this.showAppointmentsComponent = false
+          this.showTaComponent = false
+          this.showNotificationsComponent = false
+          this.showPasswordComponent = false
+          this.showUserComponent = true
           this.showLanguageComponent = false
-      }),
+        }),
         eventBus.$on('manageLanguages', () => {
           this.showAppointmentsComponent = false
           this.showTaComponent = false
@@ -93,11 +93,10 @@
           this.showPasswordComponent = false
           this.showUserComponent = false
           this.showLanguageComponent = true
-        }) 
+        })
     },
 
-    methods: {
-    }
+    methods: {}
   }
 </script>
 

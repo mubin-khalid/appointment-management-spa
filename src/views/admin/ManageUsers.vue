@@ -1,8 +1,7 @@
 <template>
   <div class="w-full">
     <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Users</h2>
-    <form class="w-full bg-white rounded px-3 mb-2" @submit.prevent="addUser">
+    <form class="w-full px-3 mb-2" @submit.prevent="addUser">
       <div class="flex items-center border-b border-b-2 border-teal-500 py-2">
         <input
           class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -39,6 +38,13 @@
           aria-label="facility"
           v-model="facility"
         >
+        <input
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="Facility Address"
+          aria-label="facility"
+          v-model="facility"
+        >
         <span class="font-hairline text-gray-700 mr-2">
           Licensed
         </span>
@@ -57,51 +63,57 @@
         </button>
       </div>
     </form>
-    <div class="table w-full py-2 shadow-2xl rounded bg-white">
-      <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Phone</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Facility</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Licensed Client</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Admin</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
+    <div class="table w-full border-blue-800 border-t-4 rounded shadow-2xl">
+      <div class="table-row bg-teal-600 font-bold text-center text-lg text-white">
+        <div class="table-cell p-4">Name</div>
+        <div class="table-cell p-4">Email</div>
+        <div class="table-cell p-4">Phone</div>
+        <div class="table-cell p-4">Facility</div>
+        <div class="table-cell p-4">Facility Address</div>
+        <div class="table-cell p-4">Licensed Client</div>
+        <div class="table-cell p-4">Admin</div>
+        <div class="table-cell p-4">Actions</div>
       </div>
       <div
-        class="table-row flex p-4 border border-black text-center"
+        class="table-row p-4 text-center text-sm text-gray-700"
         v-for="(user, index) in users"
         :key="user.id"
         :id="user.id"
       >
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ user.name }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ user.email }}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ user.phone }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ user.facility }}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
+        >{{ user.facility_address }}
+        </div>
+
+        <div
+          class="table-cell px-4 py-2"
         > {{user.licensed ? 'Yes': 'No'}}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         > {{user.is_admin ? 'Yes': 'No'}}
         </div>
 
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex rounded">
+        <div class="table-cell px-4 py-2">
           <span class="fa fa-edit content-center text-center text-blue-500 mr-3 cursor-pointer"
                 @click="editUser(index)"
           ></span>
@@ -131,7 +143,10 @@
         <input type="text"
                class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
                v-model="editedUser.facility">
-        
+        <input type="text"
+               class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
+               v-model="editedUser.facility_address">
+
         <div class="w-full flex justify-center">
           <div class="w-1/3">
             <span class="text-gray-700 font-light uppercase mr-3">admin</span>
@@ -195,6 +210,7 @@
         phone: '',
         password: '',
         facility: '',
+        facility_address: '',
         licensed: false,
         isAdmin: false,
         show: false,
@@ -206,6 +222,7 @@
           email: null,
           phone: null,
           facility: null,
+          facility_address: null,
           admin: false,
           licensed: false
         },
@@ -215,13 +232,11 @@
           email: null,
           phone: null,
           facility: null,
+          facility_address: null,
           admin: false,
           licensed: false
         }
       }
-    },
-    created() {
-      //this.loadUsers({page: this.page})
     },
     components: {
       VueAdsPagination,
@@ -246,10 +261,12 @@
         this.page = page;
       },
       deleteUser(user, index) {
+        this.show = true
         this.delete({
           id: user.id,
           index: index
         }).then(() => {
+          this.show = false
           this.popup('User: ' + user.name + ' deleted.', 'success', 2000)
         }).catch((error) => {
           this.show = false
@@ -264,6 +281,7 @@
           email: this.email,
           phone: this.phone,
           facility: this.facility,
+          facility_address: this.facility_address,
           licensed: this.licensed ? 1 : 0,
           is_admin: this.isAdmin ? 1 : 0,
         }).then(() => {
@@ -277,37 +295,47 @@
         })
       },
       rangeChange() {
+        this.show = true
+        this.loading = true
         this.getUsers({
           page: this.page
+        }).then(() => {
+          this.show = false
+          this.loading = false
         })
       },
       editUser(index) {
         this.showEditUserModal = true
         this.currentUserIndex = index
-        
+
         this.cacheUser.id = this.users[index].id
         this.cacheUser.name = this.users[index].name
         this.cacheUser.email = this.users[index].email
         this.cacheUser.phone = this.users[index].phone
         this.cacheUser.facility = this.users[index].facility
+        this.cacheUser.facility_address = this.users[index].facility_address
         this.cacheUser.admin = this.users[index].is_admin
         this.cacheUser.licensed = this.users[index].licensed
-        
+
         this.editedUser.id = this.users[index].id
         this.editedUser.name = this.users[index].name
         this.editedUser.email = this.users[index].email
         this.editedUser.phone = this.users[index].phone
         this.editedUser.facility = this.users[index].facility
+        this.editedUser.facility_address = this.users[index].facility_address
         this.editedUser.admin = this.users[index].is_admin
         this.editedUser.licensed = this.users[index].licensed
       },
       updateUser() {
         this.showEditUserModal = false
-        if(JSON.stringify(this.editedUser) != JSON.stringify(this.cacheUser)) {
+        this.show = true
+        if (JSON.stringify(this.editedUser) != JSON.stringify(this.cacheUser)) {
           this.update({
             type: 'updateUser',
             index: this.currentUserIndex,
             user: this.editedUser
+          }).then(() => {
+            this.show = false
           })
         }
       }

@@ -1,10 +1,8 @@
 <template>
-  <main class="w-full mt-10">
+  <main class="flex mt-8">
     <side-bar></side-bar>
-    <div class="float-right mr-10 w-3/4 -mt-48 relative bg-white rounded">
+    <div class="flex-1 bg-white rounded mr-1">
       <appointments v-if="showAppointmentsComponent"></appointments>
-
-      <translation-agencies v-if="showTaComponent"></translation-agencies>
       <notification v-if="showNotificationsComponent"></notification>
       <password v-if="showPasswordComponent"></password>
     </div>
@@ -16,7 +14,6 @@
 <script>
   import SidebarComponent from '../components/SidebarComponent'
   import AppointmentManager from './AppointmentManager'
-  import TranslationAgencies from './TranslationAgencies'
   import Notification from './Notification'
   import Password from './Password'
 
@@ -25,7 +22,6 @@
     components: {
       'side-bar': SidebarComponent,
       'appointments': AppointmentManager,
-      TranslationAgencies,
       Notification,
       Password
     },

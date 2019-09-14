@@ -26,7 +26,7 @@
     name: "lt",
     data() {
       return {
-        active: 'border-l border-t border-r rounded-t text-blue-700',
+        active: 'border-l border-t border-r rounded-t text-gray-700 cursor-not-allowed',
         inactive: 'text-blue-500 hover:text-blue-800',
         languageTab: true,
         templateTab: false,
