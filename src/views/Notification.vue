@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-white rounded px-1 py-3">
+  <div class="w-full rounded px-1 py-3">
     <ul class="flex border-b">
       <li class="-mb-px mr-1">
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
@@ -26,8 +26,8 @@
     name: "notification",
     data() {
       return {
-        active: 'border-l border-t border-r rounded-t text-blue-700',
-        inactive: 'text-blue-500 hover:text-blue-800',
+        active: 'border-l border-t border-r rounded-t text-gray-700 cursor-not-allowed',
+        inactive: 'text-blue-600 hover:text-blue-800',
         notificationsTab: true,
         notificationSettingTab: false,
       }

@@ -1,74 +1,72 @@
 <template>
   <div class="w-full">
     <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Appointments</h2>
-    <div class="table w-full py-2 shadow-2xl rounded bg-white">
-      <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Date</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Time</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Reminder Sent</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
+    <div class="table w-full mt-2 rounded shadow-2xl">
+      <div class="table-row bg-teal-600 font-bold text-center text-sm text-white rounded">
+        <div class="table-cell p-4">Client Name</div>
+        <div class="table-cell p-4">Client Email</div>
+        <div class="table-cell p-4">Client Phone</div>
+        <div class="table-cell p-4">Appointment Date</div>
+        <div class="table-cell p-4">Appointment Time</div>
+        <div class="table-cell p-4">Booking #</div>
+        <div class="table-cell p-4">Reminder Sent</div>
+        <div class="table-cell p-4">Actions</div>
       </div>
       <div
-        class="table-row flex p-4 border border-black text-center"
+        class="table-row p-4 text-center text-sm text-gray-700"
         v-for="(appointment, index) in filteredAppointment"
         :key="appointment.id"
         :id="appointment.id"
       >
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.name }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.email }}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.phone }}
         </div>
 
         <!--<div-->
-        <!--class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"-->
+        <!--class="table-cell px-4 py-2"-->
         <!--&gt;{{ appointment.title }}-->
         <!--</div>-->
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.appointment_date }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.appointment_time }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
-          <input v-if="appointment.reminder_sent != '1'"
-                 type="button"
-                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"
-                 value="Send"
-                 :id="appointment.id" @click="reminder(appointment)"
-          >
+          class="table-cell px-4 py-2"
+        >{{ appointment.bokn }}
         </div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
-          <input
-            type="button"
-            class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"
-            value="View"
-            :id="appointment.id" @click="showAlert(appointment)"
-          >
-          <input
-            type="button"
-            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"
-            value="Cancel"
-            :id="appointment.id"
-            @click="cancelAppointment(appointment.id, index)"
-          >
+        <div
+          class="table-cell px-4 py-2 align-middle"
+        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
+          <i v-if="appointment.reminder_sent != '1'" 
+            class="ml-2 fa fa-paper-plane text-lg text-blue-600 hover:text-blue-700 cursor-pointer" 
+             title="Send Reminder"
+             :id="appointment.id" @click="reminder(appointment)"
+          ></i>
+        </div>
+        
+        <div class="table-cell px-4 py-2 ">
+          <i class="fa fa-eye mr-3 text-lg text-blue-600 hover:text-blue-700 cursor-pointer"
+             :id="appointment.id" @click="showAlert(appointment)"
+          ></i>
+          <i class="fa fa-ban mr-3 text-lg text-red-600 hover:text-red-700 cursor-pointer"
+             @click="cancelAppointment(appointment.id, index)"
+             title="Cancel Appointment"
+          ></i>
         </div>
       </div>
       
@@ -154,10 +152,15 @@
       },
 
       rangeChange() {
+        this.show = true
+        this.loading = true
         this.loadAppointments({
           page: this.page,
           all: false,
           type: 'active'
+        }).then(() => {
+          this.show = false
+          this.loading  = false
         })
       },
       cancelAppointment(id, index) {

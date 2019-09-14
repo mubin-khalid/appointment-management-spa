@@ -1,46 +1,46 @@
 <template>
   <div class="w-full">
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Notifications</h2>
-    <div class="table w-full py-2 shadow-2xl rounded bg-white">
-      <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Customer Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Notification</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Notification Type</div>
+    <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
+    <div class="border-blue-800 border-t-4 rounded shadow-2xl table w-full">
+      <div class="bg-teal-600 font-bold table-row text-center text-lg text-white">
+        <div class="table-cell p-4">Customer Name</div>
+        <div class="table-cell p-4">Client Name</div>
+        <div class="table-cell p-4">Client Email</div>
+        <div class="table-cell p-4">Client Phone</div>
+        <div class="table-cell p-4">Notification</div>
+        <div class="table-cell p-4">Notification Type</div>
       </div>
       <div
-        class="table-row flex p-4 border border-black text-center"
+        class="table-row p-4 text-center text-sm text-gray-700"
         v-for="(notification) in notifications"
         :key="notification.id"
         :id="notification.id"
       >
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ notification.user.name }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ notification.client.name }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ notification.client.email }}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ notification.client.phone }}
         </div>
 
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ notification.type }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex capitalize"
+          class="table-cell px-4 py-2 capitalize"
           :class="notification.notification_type == 'cancel' ? 'text-red-500' : ''"
         >{{ notification.notification_type }}
         </div>
@@ -79,13 +79,15 @@
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
   import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
   import {mapActions, mapGetters} from 'vuex'
-  
+  import VueElementLoading from 'vue-element-loading'
+
   export default {
     name: "notifications",
     data() {
       return {
         loading: false,
         page: 0,
+        show: false,
       }
     },
     created() {
@@ -93,9 +95,9 @@
     components: {
       VueAdsPagination,
       VueAdsPageButton,
-      
+      VueElementLoading,
     },
-    computed:{
+    computed: {
       ...mapGetters('notifications', [
         'notifications',
         'total'
@@ -110,9 +112,14 @@
       },
 
       rangeChange() {
+        this.show = true
+        this.loading = true
         this.loadNotifications({
           page: this.page,
           all: true,
+        }).then(() => {
+          this.show = false
+          this.loading = false
         })
       },
     },
