@@ -8,8 +8,7 @@
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Date</div>
         <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Time</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Reminder Sent</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Cancelled By</div>
       </div>
       <div
         class="table-row flex p-4 border border-black text-center"
@@ -46,28 +45,7 @@
         </div>
         <div
           class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
-<!--          <input v-if="appointment.reminder_sent != '1'"-->
-<!--                 type="button"-->
-<!--                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"-->
-<!--                 value="Send"-->
-<!--                 :id="appointment.id" @click="sendReminder(appointment)"-->
-<!--          >-->
-        </div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
-          <input
-            type="button"
-            class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"
-            value="View"
-            :id="appointment.id" @click="showAlert(appointment)"
-          >
-<!--          <input-->
-<!--            type="button"-->
-<!--            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"-->
-<!--            value="Cancel"-->
-<!--            :id="appointment.id"-->
-<!--            @click="cancelAppointment(appointment.id, index)"-->
-<!--          >-->
+        >{{ appointment.cancelled_by }}
         </div>
       </div>
     </div>
@@ -107,7 +85,7 @@
   import {mapActions, mapGetters} from "vuex";
 
   export default {
-    name: "Appointments",
+    name: "PassedAppointments",
     mixins: [Popup],
     data() {
       return {
@@ -116,10 +94,11 @@
       }
     },
     created() {
-      this.loadAppointments({
-        page: this.page,
-        all: true,
-      })
+      // this.loadAppointments({
+      //   page: this.page,
+      //   all: true,
+      //   type: 'cancelled'
+      // })
     },
     components: {
       VueAdsPagination,
@@ -128,7 +107,7 @@
     computed: {
       ...mapGetters('appointment', {
         appointments: 'appointments',
-        total: 'total'
+        total: 'total',
       }),
       filteredAppointment: function () {
         if(this.total > 0) {
@@ -149,7 +128,8 @@
       rangeChange() {
         this.loadAppointments({
           page: this.page,
-          all: true,
+          all: false,
+          type: 'cancelled'
         })
       },
       cancelAppointment(id, index) {

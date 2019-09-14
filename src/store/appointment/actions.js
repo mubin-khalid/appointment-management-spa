@@ -8,7 +8,10 @@ export default {
     }
     return Request({
       method: 'get',
-      endpoint: 'appointments?page_number=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + '&all=' + all
+      endpoint: 'appointments?page_number=' + payload.page + 
+        '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE + 
+        '&type=' + payload.type + 
+        '&all=' + all
     })
       .then(response => {
         context.commit('appointments', response.data)

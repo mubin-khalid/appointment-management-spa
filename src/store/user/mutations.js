@@ -7,5 +7,8 @@ export default {
   addUser: (state, user) => {
     state.admin.users.users.push(user)
     state.admin.users.total += 1
+  },
+  updateUserState: (state, payload) => {
+    state.admin.users.users[payload.index] = payload.user
   }
 }

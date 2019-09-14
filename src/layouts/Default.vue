@@ -27,18 +27,18 @@
               class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
             >Admin
             </router-link>
-            <router-link v-if="loggedIn"
+            <router-link v-if="loggedIn && !isAdmin"
                          to="/clients"
                          class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
             >Clients
             </router-link>
 
-            <router-link v-if="loggedIn"
+            <router-link v-if="loggedIn && !isAdmin"
                          :to="{ name: 'invite'}"
                          class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
             >Send Invite
             </router-link>
-            <router-link v-if="loggedIn"
+            <router-link v-if="loggedIn && !isAdmin"
                          :to="{ name: 'settings'}"
                          class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
             >Dashboard

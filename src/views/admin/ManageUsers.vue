@@ -102,16 +102,49 @@
         </div>
 
         <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex rounded">
-          <input
-            type="button"
-            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"
-            value="Delete"
-            :id="user.id" style="border-radius: 0.25rem;"
-            @click="deleteUser(user, index)"
-          >
+          <span class="fa fa-edit content-center text-center text-blue-500 mr-3 cursor-pointer"
+                @click="editUser(index)"
+          ></span>
+          <span class="fa fa-trash content-center text-center text-red-600 ml-3 cursor-pointer"
+                :id="user.id"
+                @click="deleteUser(user, index)"
+          ></span>
         </div>
       </div>
     </div>
+
+    <modal v-if="showEditUserModal" width="w-1/3" height="h-auto"
+           @close="updateUser"
+           @dismiss="showEditUserModal = false"
+    >
+      <div slot="header"><span class="font-bold text-gray-700 text-sm">Edit Customer</span></div>
+      <div slot="body">
+        <input type="text"
+               class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
+               v-model="editedUser.name">
+        <input type="text"
+               class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
+               v-model="editedUser.email">
+        <input type="text"
+               class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
+               v-model="editedUser.phone">
+        <input type="text"
+               class="outline-none focus:outline-none bg-gray-300 rounded appearance-none p-2 w-full text-gray-700 mb-2"
+               v-model="editedUser.facility">
+        
+        <div class="w-full flex justify-center">
+          <div class="w-1/3">
+            <span class="text-gray-700 font-light uppercase mr-3">admin</span>
+            <input type="checkbox" name="admin" v-model="editedUser.admin">
+          </div>
+          <div class="w-1/3">
+            <span class="text-gray-700 font-light uppercase mr-3">licensed</span>
+            <input type="checkbox" name="admin" v-model="editedUser.licensed">
+          </div>
+        </div>
+      </div>
+    </modal>
+
     <vue-ads-pagination
       :total-items="total ? total : 1"
       :max-visible-pages="5"
@@ -148,6 +181,7 @@
   import Popup from '../../mixins/Popup'
   import VueElementLoading from 'vue-element-loading'
   import {mapActions, mapGetters} from "vuex";
+  import ModalComponent from '@/components/ModalComponent'
 
   export default {
     name: "manage-users",
@@ -164,6 +198,26 @@
         licensed: false,
         isAdmin: false,
         show: false,
+        showEditUserModal: false,
+        currentUserIndex: null,
+        cacheUser: {
+          id: null,
+          name: null,
+          email: null,
+          phone: null,
+          facility: null,
+          admin: false,
+          licensed: false
+        },
+        editedUser: {
+          id: null,
+          name: null,
+          email: null,
+          phone: null,
+          facility: null,
+          admin: false,
+          licensed: false
+        }
       }
     },
     created() {
@@ -173,6 +227,7 @@
       VueAdsPagination,
       VueAdsPageButton,
       VueElementLoading,
+      'modal': ModalComponent,
     },
     computed: {
       ...mapGetters('user', [
@@ -184,6 +239,7 @@
       ...mapActions('user', {
         getUsers: 'loadUsers',
         add: 'addUser',
+        update: 'updateUser',
         delete: 'deleteUser'
       }),
       pageChange(page) {
@@ -208,25 +264,53 @@
           email: this.email,
           phone: this.phone,
           facility: this.facility,
-          licensed: this.licensed? 1 : 0,
+          licensed: this.licensed ? 1 : 0,
           is_admin: this.isAdmin ? 1 : 0,
-        }).then( () =>  {
+        }).then(() => {
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
           this.name = this.password = this.email = this.phone = this.facility = ''
           this.licensed = this.isAdmin = false
           this.show = false
         }).catch((error) => {
           this.show = false
-          console.log(error)
           this.popup(error.message, 'error', 2000)
         })
       },
-// eslint-disable-next-line no-unused-vars
       rangeChange() {
         this.getUsers({
           page: this.page
         })
       },
+      editUser(index) {
+        this.showEditUserModal = true
+        this.currentUserIndex = index
+        
+        this.cacheUser.id = this.users[index].id
+        this.cacheUser.name = this.users[index].name
+        this.cacheUser.email = this.users[index].email
+        this.cacheUser.phone = this.users[index].phone
+        this.cacheUser.facility = this.users[index].facility
+        this.cacheUser.admin = this.users[index].is_admin
+        this.cacheUser.licensed = this.users[index].licensed
+        
+        this.editedUser.id = this.users[index].id
+        this.editedUser.name = this.users[index].name
+        this.editedUser.email = this.users[index].email
+        this.editedUser.phone = this.users[index].phone
+        this.editedUser.facility = this.users[index].facility
+        this.editedUser.admin = this.users[index].is_admin
+        this.editedUser.licensed = this.users[index].licensed
+      },
+      updateUser() {
+        this.showEditUserModal = false
+        if(JSON.stringify(this.editedUser) != JSON.stringify(this.cacheUser)) {
+          this.update({
+            type: 'updateUser',
+            index: this.currentUserIndex,
+            user: this.editedUser
+          })
+        }
+      }
     },
   }
 </script>
