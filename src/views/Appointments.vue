@@ -120,11 +120,11 @@
       }
     },
     created() {
-      this.loadAppointments({
-        page: this.page,
-        all: false,
-        show: false
-      })
+      // this.loadAppointments({
+      //   page: this.page,
+      //   all: false,
+      //   show: false
+      // })
     },
     components: {
       VueAdsPagination,
@@ -157,6 +157,7 @@
         this.loadAppointments({
           page: this.page,
           all: false,
+          type: 'active'
         })
       },
       cancelAppointment(id, index) {
