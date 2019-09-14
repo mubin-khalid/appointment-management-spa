@@ -61,4 +61,23 @@ export default {
         return Promise.reject(response)
       })
   },
+  updateUser(context, payload) {
+    return Request({
+      method: 'put',
+      endpoint: 'users/' + payload.user.id,
+      data: payload,
+      isDataRaw: true
+    }).then(response => {
+      response.data.is_admin = response.data.is_admin ? 1 : 0 
+      response.data.licensed = response.data.licensed ? 1 : 0
+      context.commit('updateUserState', {
+        index: payload.index,
+        user: response.data
+      })
+      return (response)
+    })
+      .catch((response) => {
+        return Promise.reject(response)
+      })
+  }
 }
