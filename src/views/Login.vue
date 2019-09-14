@@ -36,8 +36,9 @@
 
 <script>
   import Popup from '@/mixins/Popup'
-  import {mapActions, mapMutations} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import VueElementLoading from 'vue-element-loading'
+
   export default {
     name: "login",
     mixins: [Popup],
@@ -52,15 +53,17 @@
       }
     },
     computed: {
+      ...mapGetters('auth', [
+        'isAdmin'
+      ]),
       loggedIn() {
         return false
       }
     },
     methods: {
       ...mapActions('auth', ['login', 'getUser']),
-      ...mapMutations('auth', []),
       attemptLogin() {
-        if(this.username.trim() == '' ||  this.password.trim() == '') {
+        if (this.username.trim() == '' || this.password.trim() == '') {
           this.popup('Please fill-in all fields.', 'error', 3000)
           return;
         }
@@ -70,7 +73,7 @@
           password: this.password,
         })
           .then(response => {
-            if(!response) {
+            if (!response) {
               this.popup('Invalid Credentials', 'error', 3000)
               this.password = ''
               this.show = false
@@ -79,7 +82,12 @@
             this.show = false
             this.popup('Logged in successfully', 'success', 2000)
             this.getUser().then(() => {
-              this.$router.push({name: 'invite'})
+              if (this.isAdmin) {
+                this.$router.push({name: 'admin'})
+              } else {
+                this.$router.push({name: 'invite'})
+              }
+
             })
           })
           .catch(error => {
