@@ -116,10 +116,11 @@
       }
     },
     created() {
-      this.loadAppointments({
-        page: this.page,
-        all: true,
-      })
+      // this.loadAppointments({
+      //   page: this.page,
+      //   all: true,
+      //   type: 'active'
+      // })
     },
     components: {
       VueAdsPagination,
@@ -128,7 +129,7 @@
     computed: {
       ...mapGetters('appointment', {
         appointments: 'appointments',
-        total: 'total'
+        total: 'total',
       }),
       filteredAppointment: function () {
         if(this.total > 0) {
@@ -150,6 +151,7 @@
         this.loadAppointments({
           page: this.page,
           all: true,
+          type: 'active'
         })
       },
       cancelAppointment(id, index) {
