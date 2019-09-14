@@ -168,9 +168,6 @@
             index: index
           })
         }
-        // languageChanged: event => {
-        //   //eventBus.$emit('languageChanged', {"languageId": event.target.value})
-        // }
       }
     }
 </script>
