@@ -17,7 +17,7 @@
 
 <script>
   import SidebarComponent from './SidebarComponent'
-  import Appointments from './Appointments'
+  import AppointmentManager from './AppointmentManager'
   import TranslationAgencies from './TranslationAgencies'
   import Notifications from './Notifications'
   import Password from './Password'
@@ -28,7 +28,7 @@
     name: "Settings",
     components: {
       'side-bar': SidebarComponent,
-      'appointments': Appointments,
+      'appointments': AppointmentManager,
       TranslationAgencies,
       Notifications,
       Password,
