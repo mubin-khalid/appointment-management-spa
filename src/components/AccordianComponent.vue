@@ -61,9 +61,16 @@
     border-color: #ffbb83;
   }
   .accordion._3 {
-    background-color: #3f9462;
+    background-color: #2b3794;
   }
   .accordion._3 .body {
+    border-color: #2b3794;
+  }
+  
+  .accordion._4 {
+    background-color: #3f9462;
+  }
+  .accordion._4 .body {
     border-color: #3f9462;
   }
 
