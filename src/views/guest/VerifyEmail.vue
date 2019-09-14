@@ -6,9 +6,6 @@
       <div class="border-teal p-8 border-t-12 bg-white mb-6 rounded-lg shadow-lg">
         <div class="mb-4">
           <label class="font-bold text-grey-darker block mb-2">Password</label>
-          <!--          <input type="password"-->
-          <!--                 class="block appearance-none focus:outline-none outline-none w-full bg-white border border-grey-light hover:border-grey px-2 py-2 rounded shadow"-->
-          <!--                 placeholder="**********" autocomplete="off">-->
           <password :toggle="true" :badge="false" v-model="password" id="password"
                     :defaultClass='"bg-gray-300 border-2 focus:outline-none outline-none p-3 rounded text-sm w-full"'/>
 
@@ -85,7 +82,7 @@
         }
       }
     },
-    created(){
+    created() {
       this.verifyEmail({
         checksum: this.$route.params.id
       }).then(() => {
