@@ -1,9 +1,9 @@
 <template>
   <div class="w-full">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-10/12 m-auto">
+    <form class="shadow-2xl rounded px-8 pt-6 pb-8 mb-4 w-10/12 m-auto">
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/12">
-          <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email-switch">
+          <label class="block text-gray-800 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email-switch">
             Email
           </label>
         </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/12">
-          <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email-switch">
+          <label class="block text-gray-800 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email-switch">
             SMS
           </label>
         </div>

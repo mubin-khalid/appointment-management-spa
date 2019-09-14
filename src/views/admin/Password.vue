@@ -1,6 +1,5 @@
 <template>
   <div class="w-full">
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Change Password</h2>
     <form class="bg-white float-left m-auto mt-6 p-6 rounded w-10/12">
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">

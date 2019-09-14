@@ -1,73 +1,56 @@
 <template>
   <div class="w-full">
-    <h2 class="bg-white mb-2 px-5 rounded text-2xl text-teal-700">Appointments</h2>
-    <div class="table w-full py-2 shadow-2xl rounded bg-white">
-      <div class="table-row flex p-4 rounded text-center">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex font-bold">Client Name</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Client Phone</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Date</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Appointment Time</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Reminder Sent</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex font-bold">Actions</div>
+    <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
+    <div class="table w-full mt-2 rounded shadow-2xl">
+      <div class="table-row bg-teal-600 font-bold text-center text-sm text-white rounded">
+        <div class="table-cell p-4">Client Name</div>
+        <div class="table-cell p-4">Client Email</div>
+        <div class="table-cell p-4">Client Phone</div>
+        <div class="table-cell p-4">Appointment Date</div>
+        <div class="table-cell p-4">Appointment Time</div>
+        <div class="table-cell p-4">Booking #</div>
+        <div class="table-cell p-4">Reminder Sent</div>
+        <div class="table-cell p-4">Actions</div>
       </div>
       <div
-        class="table-row flex p-4 border border-black text-center"
+        class="table-row p-4 text-center text-sm text-gray-700"
         v-for="(appointment) in filteredAppointment"
         :key="appointment.id"
         :id="appointment.id"
       >
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.name }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.email }}
         </div>
 
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.client.phone }}
         </div>
-
-        <!--<div-->
-        <!--class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"-->
-        <!--&gt;{{ appointment.title }}-->
-        <!--</div>-->
-
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.appointment_date }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
+          class="table-cell px-4 py-2"
         >{{ appointment.appointment_time }}
         </div>
         <div
-          class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex"
-        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
-          <!--          <input v-if="appointment.reminder_sent != '1'"-->
-          <!--                 type="button"-->
-          <!--                 class="rounded bg-blue-500 p-2 text-white hover:text-black cursor-pointer"-->
-          <!--                 value="Send"-->
-          <!--                 :id="appointment.id" @click="sendReminder(appointment)"-->
-          <!--          >-->
+          class="table-cell px-4 py-2"
+        >{{ appointment.bokn }}
         </div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-2 text-sm flex">
-          <input
-            type="button"
-            class="rounded bg-teal-500 p-2 text-white hover:text-black cursor-pointer"
-            value="View"
-            :id="appointment.id" @click="showAlert(appointment)"
-          >
-          <!--          <input-->
-          <!--            type="button"-->
-          <!--            class="rounded bg-red-600 p-2 text-white hover:text-black cursor-pointer mx-2"-->
-          <!--            value="Cancel"-->
-          <!--            :id="appointment.id"-->
-          <!--            @click="cancelAppointment(appointment.id, index)"-->
-          <!--          >-->
+        <div
+          class="table-cell px-4 py-2"
+        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
+        </div>
+        <div class="table-cell px-4 py-2">
+          <i class="fa fa-eye mr-3 text-lg text-blue-600 hover:text-blue-700 cursor-pointer"
+             :id="appointment.id" @click="showAlert(appointment)"
+          ></i>
         </div>
       </div>
     </div>
@@ -102,9 +85,10 @@
 <script>
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import 'vue-ads-pagination/dist/vue-ads-pagination.css'
-  import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination';
+  import VueAdsPagination, {VueAdsPageButton} from 'vue-ads-pagination'
   import Popup from '@/mixins/Popup'
-  import {mapActions, mapGetters} from "vuex";
+  import {mapActions, mapGetters} from "vuex"
+  import VueElementLoading from 'vue-element-loading'
 
   export default {
     name: "PassedAppointments",
@@ -113,18 +97,13 @@
       return {
         loading: false,
         page: 0,
+        show: false
       }
-    },
-    created() {
-      // this.loadAppointments({
-      //   page: this.page,
-      //   all: true,
-      //   type: 'passed'
-      // })
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
+      VueElementLoading
     },
     computed: {
       ...mapGetters('appointment', {
@@ -141,37 +120,21 @@
     methods: {
       ...mapActions('appointment', [
         'loadAppointments',
-        'cancel',
       ]),
       pageChange(page) {
         this.page = page;
       },
 
       rangeChange() {
+        this.show = true
+        this.loading = true
         this.loadAppointments({
           page: this.page,
           all: false,
           type: 'passed'
-        })
-      },
-      cancelAppointment(id, index) {
-        this.cancel({
-          id: id,
-          cancelled_by: 'admin',
-          index: index
         }).then(() => {
-          this.popup('Appointment Cancelled', 'success', 5000)
-        }).catch(() => {
-          this.popup('Unable to cancel it, please try later', 'error', 3000)
-        })
-      },
-      sendReminder(appointment) {
-        this.$store.dispatch('sendReminder', {
-          'notification_type': 'email',
-          'appointment_id': appointment.id
-        }).then(() => {
-          this.popup('Reminder Sent', 'success', 2000)
-          appointment.reminder_sent = 1
+          this.show = false
+          this.loading = false
         })
       },
       showAlert(appointment) {

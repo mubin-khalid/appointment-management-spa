@@ -21,12 +21,6 @@
         </div>
         <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <div class="lg:flex-grow text-right font-bold mr-4">
-            <router-link
-              v-if="loggedIn && isAdmin"
-              :to="{ name: 'admin'}"
-              class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
-            >Admin
-            </router-link>
             <router-link v-if="loggedIn && !isAdmin"
                          to="/clients"
                          class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
@@ -43,19 +37,11 @@
                          class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
             >Dashboard
             </router-link>
-            <router-link
-              v-if="loggedIn"
-              :to="{ name: 'logout'}"
-              class="block mt-4 lg:inline-block lg:mt-0 text-blue-600 hover:text-teal-500 mr-4"
-            >Logout
-            </router-link>
           </div>
         </div>
       </nav>
     </header>
-    <div id="main" class="content-center flex flex-wrap mx-auto">
-      <slot></slot>
-    </div>
+    <slot></slot>
   </div>
 </template>
 
