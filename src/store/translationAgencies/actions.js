@@ -29,5 +29,20 @@ export default {
       context.commit('addTa', response.data)
       return response.data
     })
-  }
+  },
+  
+  update(context, payload) {
+    return Request({
+      method: 'put',
+      endpoint: 'ta/' + payload.editedTA.id,
+      data: payload.editedTA,
+      isDataRaw: true
+    }).then((response) => {
+      context.commit('updateTa', payload)
+      return response.data
+    }).catch((error) => {
+      return error.message
+    })
+  },
+  
 }
