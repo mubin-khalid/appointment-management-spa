@@ -199,10 +199,6 @@
           this.popup('Please select Language', 'error', 2000)
           return
         }
-        if (this.bokn == 0) {
-          this.popup('Please enter BOKN.', 'error', 2000)
-          return
-        }
         this.show = true
         this.save({
           client_id: this.client,
