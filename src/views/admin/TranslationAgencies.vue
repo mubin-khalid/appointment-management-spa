@@ -44,10 +44,11 @@
         <div class="table-cell p-4">Email</div>
         <div class="table-cell p-4">Phone</div>
         <div class="table-cell p-4">Fax</div>
+        <div class="table-cell p-4">Actions</div>
       </div>
       <div
         class="table-row text-center text-gray-700 text-sm"
-        v-for="agency in agencies"
+        v-for="(agency, index) in agencies"
         :key="agency.id"
         :id="agency.id"
       >
@@ -69,8 +70,27 @@
           class="table-cell p-3"
         >{{ agency.fax }}
         </div>
+        <div
+          class="table-cell p-3"
+        ><i class="fa fa-edit text-blue-600 hover:text-blue-700 cursor-pointer text-lg"
+          @click="showModal(index)"
+        ></i>
+        </div>
       </div>
     </div>
+    <modal v-if="showEditModal" width="w-1/3" height="h-auto" @close="doneEdit">
+      <div slot="header" class="text-gray-700"> Edit <span class="font-bold">{{ cachedTA.name }}</span></div>
+      <div slot="body">
+        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2" 
+               v-model="editedTA.name" id="name">
+        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2"
+               v-model="editedTA.email" id="email">
+        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2"
+               v-model="editedTA.phone" id="phone">
+        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2"
+               v-model="editedTA.fax" id="fax">
+      </div>
+    </modal>
     <vue-ads-pagination
       :total-items="total ? total : 1"
       :max-visible-pages="5"
@@ -106,12 +126,14 @@
   import Popup from '@/mixins/Popup'
   import {mapActions, mapGetters} from 'vuex'
   import VueElementLoading from 'vue-element-loading'
+  import ModalComponent from '@/components/ModalComponent'
 
   export default {
     name: "translation-agencies",
     mixins: [Popup],
     data() {
       return {
+        showEditModal: false,
         loading: false,
         show:false,
         page: 0,
@@ -119,12 +141,28 @@
         email: '',
         phone: '',
         fax: '',
+        currentIndex: null,
+        cachedTA: {
+          id: null,
+          name: null,
+          email: null,
+          phone: null,
+          fax: null,
+        },
+        editedTA: {
+          id: null,
+          name: null,
+          email: null,
+          phone: null,
+          fax: null,
+        },
       }
     },
     components: {
       VueAdsPagination,
       VueAdsPageButton,
       VueElementLoading,
+      'modal': ModalComponent,
     },
     computed: {
       ...mapGetters('translationAgencies', {
@@ -135,7 +173,8 @@
     methods: {
       ...mapActions('translationAgencies', [
         'getTranslationAgencies',
-        'store'
+        'store',
+        'update'
       ]),
       pageChange(page) {
         this.page = page;
@@ -172,6 +211,31 @@
           this.show = false
         })
       },
+      showModal(index) {
+        this.showEditModal = true
+        this.currentIndex = index
+        this.editedTA.id = this.cachedTA.id = this.agencies[index].id
+        this.editedTA.name = this.cachedTA.name = this.agencies[index].name
+        this.editedTA.email = this.cachedTA.email = this.agencies[index].email
+        this.editedTA.phone = this.cachedTA.phone = this.agencies[index].phone
+        this.editedTA.fax = this.cachedTA.fax = this.agencies[index].fax
+      },
+      doneEdit() {
+        this.showEditModal = false
+        if(JSON.stringify(this.editedTA) != JSON.stringify(this.cachedTA)) {
+          this.show = true
+          this.update({
+            index: this.currentIndex,
+            editedTA: this.editedTA
+          }).then(() => {
+            this.show = false
+            this.popup('Updated successfully', 'success', 2000)
+          }).catch(() => {
+            this.show = false
+            this.popup('Unable to update.', 'error', 2000)
+          })
+        }
+      }
     },
   }
 </script>
