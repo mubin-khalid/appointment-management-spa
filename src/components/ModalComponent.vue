@@ -1,52 +1,50 @@
 <template>
-    <div id="modal">
-      <transition name="modal">
-        <div class="modal-mask">
-          <div class="modal-wrapper" @click="$emit('dismiss')">
-            <div class="modal-container " :class="[width, height]" @click.stop="">
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper" @click="$emit('dismiss')">
+        <div class="modal-container " :class="[width, height]" @click.stop="">
 
-              <div class="modal-header">
-                <slot name="header">
-                  default header
-                </slot>
-              </div>
+          <div class="modal-header">
+            <slot name="header">
+              default header
+            </slot>
+          </div>
 
-              <div class="modal-body">
-                <slot name="body">
-                </slot>
-              </div>
+          <div class="modal-body">
+            <slot name="body">
+            </slot>
+          </div>
 
-              <div class="modal-footer">
-                <slot name="footer">
-                  <button class="modal-default-button bg-teal-600 p-2 rounded text-white" @click="$emit('close')">
-                    {{buttonText}}
-                  </button>
-                </slot>
-              </div>
-            </div>
+          <div class="modal-footer">
+            <slot name="footer">
+              <button class="modal-default-button bg-teal-600 p-2 rounded text-white" @click="$emit('close')">
+                {{buttonText}}
+              </button>
+            </slot>
           </div>
         </div>
-      </transition>
+      </div>
     </div>
+  </transition>
 </template>
 
 <script>
-    export default {
-        name: "modal",
-      props: {
-          width: {
-            type: String
-          },
-        height: {
-            default: 'h-32',
-          type: String
-        },
-        buttonText: {
-            default: 'OK',
-          type: String
-        }
+  export default {
+    name: "modal",
+    props: {
+      width: {
+        type: String
+      },
+      height: {
+        default: 'h-32',
+        type: String
+      },
+      buttonText: {
+        default: 'OK',
+        type: String
       }
     }
+  }
 </script>
 
 <style scoped>
