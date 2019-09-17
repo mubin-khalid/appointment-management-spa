@@ -1,7 +1,7 @@
 <template>
   <main class="flex mt-8">
     <side-bar></side-bar>
-    <div class="flex-1 bg-white rounded mr-1">
+    <div class="bg-white lg:-ml-0 lg:flex-1 lg:mt-0 mr-1 rounded sm:-ml-1 sm:m-auto sm:w-full">
       <appointments v-if="showAppointmentsComponent"></appointments>
 
       <translation-agencies v-if="showTaComponent"></translation-agencies>

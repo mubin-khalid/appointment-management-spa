@@ -1,12 +1,14 @@
 <template>
-  <aside class="w-1/6 mr-2">
+  <aside class="sm:w-0 lg:w-1/6 mr-2">
     <div id="sidebar"
-         class="bg-white border-b fixed h-full hidden inset-0 lg:-mb-0 lg:block lg:border-0 lg:border-b-0 lg:h-auto lg:overflow-y-visible lg:pt-0 lg:static rounded shadow-2xl z-90">
+         class="bg-white sm:mt-20 lg:mt-0 border-b fixed h-auto inset-0 lg:-mb-0 lg:block lg:border-0 lg:border-b-0 lg:h-auto lg:overflow-y-visible lg:pt-0 lg:static rounded shadow-2xl z-10"
+    :class="hiddenClass"
+    >
 
       <div id="navWrapper"
            class="h-full overflow-y-auto scrolling-touch lg:h-auto lg:block lg:relative lg:sticky lg:top-16 bg-white lg:bg-transparent">
         <nav id="nav"
-             class="px-6 pt-6 overflow-y-auto text-base lg:text-sm lg:pl-6 lg:pr-8 sticky?lg:h-(screen-16)">
+             class="px-6 pt-6 overflow-y-auto text-base lg:text-sm lg:py-12 lg:pl-6 lg:pr-8 sticky?lg:h-screen">
 
           <div class="mb-10">
               <span
@@ -71,7 +73,7 @@
                     class="px-2 -mx-2 py-1 transition-fast relative block hover:translate-r-2px">
                     <span class="rounded absolute inset-0 bg-teal-200 opacity-0"></span>
                     <span
-                      class="relative hover:text-gray-900 text-gray-600 font-medium cursor-pointer hover:font-bold hover:text-teal-600"
+                      class="relative hover:text-gray-900 text-gray-600 font-medium cursor-pointer lg:hover:font-bold hover:text-teal-600"
                       :class="{active: element == 'lt'}"
                       @click="manageLanguages">
                       <i class="fa fa-language mr-1"></i>
@@ -110,35 +112,55 @@
     data() {
       return {
         active: 'text-teal-600 font-bold',
-        element: 'appointment'
+        element: 'appointment',
+        hiddenClass: 'hidden'
       }
     },
     created() {
+      eventBus.$on('showNav', (payload) => {
+        if(payload.hidden) {
+          this.hiddenClass = 'hidden'
+        }else{
+          this.hiddenClass = 'block'
+        }
+      })
     },
     methods: {
       loadAppointments() {
         this.element = 'appointment'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('loadAppointments')
+        eventBus.$emit('resetMenuButton')
       },
       loadAgencies() {
         this.element = 'ta'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('loadAgencies')
+        eventBus.$emit('resetMenuButton')
       },
       loadNotifications() {
         this.element = 'notifications'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('loadNotifications')
+        eventBus.$emit('resetMenuButton')
       },
       changePassword() {
         this.element = 'password'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('changePassword')
+        eventBus.$emit('resetMenuButton')
       },
       manageUsers() {
         this.element = 'users'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('manageUsers')
+        eventBus.$emit('resetMenuButton')
       },
       manageLanguages() {
         this.element = 'lt'
+        this.hiddenClass = 'hidden'
         eventBus.$emit('manageLanguages')
+        eventBus.$emit('resetMenuButton')
       }
     }
   }
