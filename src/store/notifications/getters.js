@@ -7,5 +7,8 @@ export default {
   },
   notificationSettings: state => {
     return state.notificationSettings
+  },
+  hooks: state => {
+    return state.hooks
   }
 }

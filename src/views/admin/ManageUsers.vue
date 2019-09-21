@@ -46,12 +46,12 @@
           v-model="facility"
         >
         <span class="font-hairline text-gray-700 mr-2">
-          Licensed
+          {{verbiage.licensed}}
         </span>
         <input type="checkbox" title="Licensed Client" aria-label="facility" class="mr-8" v-model="licensed">
 
         <span class="font-hairline text-gray-700 mr-2">
-          Admin
+          {{verbiage.admin}}
         </span>
         <input type="checkbox" title="Admin" aria-label="Admin" class="mr-8" v-model="isAdmin">
 
@@ -59,20 +59,20 @@
         <button
           class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
           type="submit"
-        >Add
+        >{{verbiage.add}}
         </button>
       </div>
     </form>
     <div class="table w-full border-blue-800 border-t-4 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-lg text-white">
-        <div class="table-cell p-4">Name</div>
-        <div class="table-cell p-4">Email</div>
-        <div class="table-cell p-4">Phone</div>
-        <div class="table-cell p-4">Facility</div>
-        <div class="table-cell p-4">Facility Address</div>
-        <div class="table-cell p-4">Licensed Client</div>
-        <div class="table-cell p-4">Admin</div>
-        <div class="table-cell p-4">Actions</div>
+        <div class="table-cell p-4">{{verbiage.name}}</div>
+        <div class="table-cell p-4">{{verbiage.email}}</div>
+        <div class="table-cell p-4">{{verbiage.phone}}</div>
+        <div class="table-cell p-4">{{verbiage.facility}}</div>
+        <div class="table-cell p-4">{{verbiage.facility}} {{verbiage.address}}</div>
+        <div class="table-cell p-4">{{verbiage.licensed}}</div>
+        <div class="table-cell p-4">{{verbiage.admin}}</div>
+        <div class="table-cell p-4">{{verbiage.actions}}</div>
       </div>
       <div
         class="table-row p-4 text-center text-sm text-gray-700"
@@ -105,12 +105,25 @@
 
         <div
           class="table-cell px-4 py-2"
-        > {{user.licensed ? 'Yes': 'No'}}
+        > 
+          <span class="fa"
+                :class="{'fa-check-circle text-teal-600': (user.licensed == '1'),
+               'fa-times-circle text-red-700': (user.licensed != '1')
+               }
+          
+        ">
+        </span>
         </div>
 
         <div
           class="table-cell px-4 py-2"
-        > {{user.is_admin ? 'Yes': 'No'}}
+        > <span class="fa"
+                :class="{'fa-check-circle text-teal-600': (user.is_admin == '1'),
+               'fa-times-circle text-red-700': (user.is_admin != '1')
+               }
+          
+        ">
+        </span>
         </div>
 
         <div class="table-cell px-4 py-2">
@@ -170,8 +183,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Users: {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total 
-            }}</span></span>
+          <span>
+            {{ verbiage.appointment }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -248,7 +265,10 @@
       ...mapGetters('user', [
         'users',
         'total'
-      ])
+      ]),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     methods: {
       ...mapActions('user', {

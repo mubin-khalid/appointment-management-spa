@@ -3,14 +3,14 @@
     <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
     <div class="rounded shadow-2xl table w-full">
       <div class="table-row p-4 text-center font-bold text-gray-700 text-sm">
-        <div class="table-cell p-3">Customer Name</div>
-        <div class="table-cell p-3">Client Name</div>
-        <div class="table-cell p-3">Client Email</div>
-        <div class="table-cell p-3">Client Phone</div>
-        <div class="table-cell p-3">Appointment Date</div>
-        <div class="table-cell p-3">Appointment Time</div>
-        <div class="table-cell p-3">Booking ID</div>
-        <div class="table-cell p-3">Cancelled By</div>
+        <div class="table-cell p-3">{{ verbiage.customer }} {{ verbiage.name }}</div>
+        <div class="table-cell p-3">{{ verbiage.client }} {{ verbiage.name }}</div>
+        <div class="table-cell p-3">{{ verbiage.client }} {{ verbiage.email }}</div>
+        <div class="table-cell p-3">{{ verbiage.client }} {{ verbiage.phone }}</div>
+        <div class="table-cell p-3">{{ verbiage.appointment }} {{ verbiage.date }}</div>
+        <div class="table-cell p-3">{{ verbiage.appointment }} {{ verbiage.time }}</div>
+        <div class="table-cell p-3">{{ verbiage.booking_id }}</div>
+        <div class="table-cell p-3">{{ verbiage.cancelled }}</div>
       </div>
       <div
         class="table-row text-center text-gray-700 text-sm"
@@ -63,7 +63,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Appointment {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total }}</span></span>
+          <span>
+            {{ verbiage.appointment }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -106,6 +111,9 @@
       ...mapGetters('appointment', {
         appointments: 'appointments',
         total: 'total',
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
       }),
       filteredAppointment: function () {
         if (this.total > 0) {

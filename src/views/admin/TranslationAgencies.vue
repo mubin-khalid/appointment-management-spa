@@ -34,17 +34,17 @@
         <button
           class="flex-shrink-0 bg-teal-600 hover:bg-teal-700 border-teal-600 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
           type="submit"
-        >Add
+        >{{ verbiage.add }}
         </button>
       </div>
     </form>
     <div class="table w-full border-blue-800 border-t-4 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-lg text-white">
-        <div class="table-cell p-4">Name</div>
-        <div class="table-cell p-4">Email</div>
-        <div class="table-cell p-4">Phone</div>
-        <div class="table-cell p-4">Fax</div>
-        <div class="table-cell p-4">Actions</div>
+        <div class="table-cell p-4">{{ verbiage.name }}</div>
+        <div class="table-cell p-4">{{ verbiage.email }}</div>
+        <div class="table-cell p-4">{{ verbiage.phone }}</div>
+        <div class="table-cell p-4">{{ verbiage.fax }}</div>
+        <div class="table-cell p-4">{{ verbiage.actions }}</div>
       </div>
       <div
         class="table-row text-center text-gray-700 text-sm"
@@ -73,15 +73,16 @@
         <div
           class="table-cell p-3"
         ><i class="fa fa-edit text-blue-600 hover:text-blue-700 cursor-pointer text-lg"
-          @click="showModal(index)"
+            @click="showModal(index)"
         ></i>
         </div>
       </div>
     </div>
     <modal v-if="showEditModal" width="w-1/3" height="h-auto" @close="doneEdit">
-      <div slot="header" class="text-gray-700"> Edit <span class="font-bold">{{ cachedTA.name }}</span></div>
+      <div slot="header" class="text-gray-700"> {{ verbiage.edit }}
+        <span class="font-bold">{{ cachedTA.name }}</span></div>
       <div slot="body">
-        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2" 
+        <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2"
                v-model="editedTA.name" id="name">
         <input type="text" class="w-full bg-gray-100 text-gray-700 outline-none focus:outline-none p-2 mb-2"
                v-model="editedTA.email" id="email">
@@ -101,7 +102,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Appointment {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total }}</span></span>
+          <span>
+            {{ verbiage.appointment }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -135,7 +141,7 @@
       return {
         showEditModal: false,
         loading: false,
-        show:false,
+        show: false,
         page: 0,
         name: '',
         email: '',
@@ -168,6 +174,9 @@
       ...mapGetters('translationAgencies', {
         agencies: 'translation_agencies',
         total: 'total'
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
       }),
     },
     methods: {
@@ -222,7 +231,7 @@
       },
       doneEdit() {
         this.showEditModal = false
-        if(JSON.stringify(this.editedTA) != JSON.stringify(this.cachedTA)) {
+        if (JSON.stringify(this.editedTA) != JSON.stringify(this.cachedTA)) {
           this.show = true
           this.update({
             index: this.currentIndex,

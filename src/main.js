@@ -56,9 +56,6 @@ new Vue({
     loggedIn() {
       return this.$store.getters.loggedIn
     },
-    patients() {
-      return this.$store.getters('patients')
-    }
   },
   render: h => h(App)
 }).$mount('#app')

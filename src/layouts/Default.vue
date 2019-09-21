@@ -1,6 +1,29 @@
 <template>
   <div id="container">
     <header id="header" class="w-full">
+      <div class="bg-gray-200 rounded cursor-pointer float-right mr-2 mt-2 text-center w-8"
+      >
+        <div @click="showLocaleDropDown"
+             @focusin="focus(true)"
+             @focusout="focus(false)"
+        ><i class="fa fa-flag text-blue-600 hover:text-teal-500"></i></div>
+        
+        <transition :class="close" name="fade">
+          <div>
+            <div :class="[close, locale == 'en'? 'cursor-not-allowed text-teal-500' : 
+        'hover:text-teal-500 text-gray-700 cursor-pointer']"
+                 class="font-bold"
+                 @click="loadVerbiage('en')">EN
+            </div>
+            <div :class="[close, locale == 'se'? 'cursor-not-allowed text-teal-500' : 
+        'hover:text-teal-500 text-gray-700 cursor-pointer']" class="font-bold"
+                 @click="loadVerbiage('se')"
+            >SE</div>
+          </div>
+        </transition>
+        
+      </div>
+
       <nav class="flex items-center justify-between flex-wrap p-8">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
           <img src="../assets/images/logo.png" alt>
@@ -58,32 +81,68 @@
 </template>
 
 <script>
-  import {mapGetters} from "vuex";
-
+  import '@fortawesome/fontawesome-free/css/all.min.css'
+  import {mapGetters, mapActions} from "vuex";
   export default {
     name: "Default",
+    components: {
+    },
     data() {
       return {
         hidden: false,
+        close: 'hidden'
       }
     },
     created() {
       eventBus.$on('resetMenuButton', () => {
         this.hidden = !this.hidden
       })
+      this.verbiage({
+        languageCode: this.locale || 'en'
+      })
     },
     computed: {
+      
       ...mapGetters({
         loggedIn: 'auth/loggedIn',
         isAdmin: 'auth/isAdmin',
+        locale: 'verbiage/getLocale'
       }),
     },
     methods: {
+      ...mapActions({
+        verbiage: 'verbiage/loadVerbiage',
+      }),
       toggle(){
         this.hidden = !this.hidden
         eventBus.$emit('showNav', {hidden: !this.hidden})
+      },
+      showLocaleDropDown() {
+        this.close = this.close  == 'hidden' ? '' : 'hidden' 
+      },
+      focus(value) {
+        if(value) {
+          this.close  = 'hidden'
+        } else{
+          this.close  = ''
+        }
+      },
+      loadVerbiage(languageCode) {
+        this.close  = 'hidden'
+        this.verbiage({
+          languageCode: languageCode
+        })
       }
     }
   };
 </script>
+
+<style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
 
