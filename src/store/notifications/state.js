@@ -1,4 +1,5 @@
 export default {
   notifications: {},
-  notificationSettings: {}
+  notificationSettings: {},
+  hooks: {},
 }

@@ -20,8 +20,8 @@
                         d="M12 21V5a5 5 0 0 1 4-2h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4.34a2 2 0 0 0-1.42.59l-.83.82A2 2 0 0 1 12 21z"/>
                 </svg>
                 <span
-                  class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600" :class="{active: element == 'appointment'}"
-                  @click="loadAppointments">Appointments</span>
+                  class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600 capitalize" :class="{active: element == 'appointment'}"
+                  @click="loadAppointments">{{verbiage.appointments}}</span>
               </span>
             <span
               class="mt-3 lg:mt-1 flex items-center px-2 -mx-2 py-1">
@@ -34,8 +34,7 @@
                 <span
                   class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600"
                   :class="{active: element == 'ta'}"
-                  @click="loadAgencies">Translation 
-                  Agencies</span>
+                  @click="loadAgencies">{{verbiage.translation_agencies}}</span>
               </span>
             <span
               class="mt-3 lg:mt-1 flex items-center px-2 -mx-2 py-1">
@@ -48,7 +47,7 @@
                 <span
                   class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600"
                   :class="{active: element == 'notifications'}"
-                  @click="loadNotifications">Notifications</span>
+                  @click="loadNotifications">{{verbiage.notifications}}</span>
               </span>
           </div>
           <div class="mb-8">
@@ -65,7 +64,7 @@
                       :class="{active: element == 'users'}"
                       @click="manageUsers">
                       <i class="fa fa-users mr-1"></i>
-                      Manage Users</span>
+                      {{verbiage.manage_users}}</span>
                   </span>
               </li>
               <li class="mb-3 lg:mb-1">
@@ -77,7 +76,7 @@
                       :class="{active: element == 'lt'}"
                       @click="manageLanguages">
                       <i class="fa fa-language mr-1"></i>
-                      Languages/Templates</span>
+                      {{verbiage.languages}}</span>
                   </span>
               </li>
               <li class="mb-3 lg:mb-1">
@@ -89,7 +88,7 @@
                       :class="{active: element == 'password'}"
                       @click="changePassword">
                       <i class="fa fa-key mr-1"></i>
-                      Change Password</span>
+                      {{verbiage.change}} {{verbiage.password}}</span>
                   </span>
               </li>
             </ul>
@@ -97,7 +96,7 @@
             <div class="mt-4">
               <router-link :to="{name: 'logout'}"
                            class="text-red-600 hover:text-red-800 text-sm w-1 align-middle font-bold"><i
-                class="fa fa-sign-out-alt mr-1"></i>Logout</router-link>
+                class="fa fa-sign-out-alt mr-1"></i>{{verbiage.logout}}</router-link>
             </div>
           </div>
         </nav>
@@ -107,6 +106,7 @@
 </template>
 
 <script>
+  import {mapGetters} from  'vuex'
   export default {
     name: "SidebarComponent",
     data() {
@@ -115,6 +115,11 @@
         element: 'appointment',
         hiddenClass: 'hidden'
       }
+    },
+    computed: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     created() {
       eventBus.$on('showNav', (payload) => {

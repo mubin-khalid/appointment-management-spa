@@ -9,6 +9,7 @@ import user from './user'
 import notifications from './notifications'
 import translationAgencies from './translationAgencies'
 import verify from './verify'
+import verbiage from  './verbiage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     user,
     notifications,
     translationAgencies,
-    verify
+    verify,
+    verbiage
   },
 })
