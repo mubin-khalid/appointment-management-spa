@@ -19,10 +19,11 @@
   import SidebarComponent from './SidebarComponent'
   import AppointmentManager from './AppointmentManager'
   import TranslationAgencies from './TranslationAgencies'
-  import Notifications from './Notifications'
+  import Notifications from './NotificationManager'
   import Password from './Password'
   import ManageUsers from './ManageUsers'
   import LT from './LT'
+  import {mapGetters} from  'vuex'
 
   export default {
     name: "Settings",
@@ -44,6 +45,11 @@
         showUserComponent: false,
         showLanguageComponent: false,
       }
+    },
+    computer: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     created() {
       eventBus.$on('loadAppointments', () => {

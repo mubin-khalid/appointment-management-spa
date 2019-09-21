@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
+    <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
     <div class="table w-full mt-2 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-sm text-white rounded">
         <div class="table-cell p-4">Client Name</div>

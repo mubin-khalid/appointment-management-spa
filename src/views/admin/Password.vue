@@ -4,7 +4,7 @@
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
           <label class="block text-gray-800 font-bold md:text-right mb-1 md:mb-0 pr-4" for="old_password">
-            Old Password
+            {{verbiage.old}} {{verbiage.password}}
           </label>
         </div>
         <div class="md:w-2/3">
@@ -18,7 +18,7 @@
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
           <label class="block text-gray-800 font-bold md:text-right mb-1 md:mb-0 pr-4" for="new_password">
-            New Password
+            {{verbiage.new}} {{verbiage.password}}
           </label>
         </div>
         <div class="md:w-2/3">
@@ -34,7 +34,7 @@
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
           <label class="block text-gray-800 font-bold md:text-right mb-1 md:mb-0 pr-4" for="confirm_new_password">
-            Repeat Password
+            {{verbiage.repeat}} {{verbiage.password}}
           </label>
         </div>
         <div class="md:w-2/3">
@@ -54,7 +54,7 @@
           <button
             class="shadow bg-blue-600 hover:bg-blue-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
             type="button" @click="changePassword" :disabled="disabled" :class="disabledClass" >
-            Change Password
+            {{verbiage.change}} {{verbiage.password}}
           </button>
         </div>
       </div>
@@ -81,7 +81,10 @@
     computed: {
       ...mapGetters({
         user: 'auth/user'
-      })
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     methods: {
       ...mapActions('user', {

@@ -206,7 +206,7 @@
       }
     },
     watch: {
-      searchClients(after, before) {
+      searchClients() {
         this.performSearch()
       }
     },

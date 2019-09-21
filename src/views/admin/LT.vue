@@ -5,13 +5,13 @@
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="languageTab ? active : inactive"
               @click="activateLanguages">
-        Languages</span>
+        {{verbiage.languages}}</span>
       </li>
       <li class="-mb-px mr-1">
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="templateTab ? active : inactive"
               @click="activateTemplates"
-        >Templates</span>
+        >{{verbiage.templates}}</span>
       </li>
     </ul>
     <language v-if="languageTab"></language>
@@ -21,6 +21,7 @@
 <script>
   import Templates from './Templates'
   import Language from './Language'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "lt",
@@ -36,8 +37,10 @@
       'templates': Templates,
       'language': Language
     },
-    created() {
-
+    computed:{
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     methods: {
       activateLanguages() {

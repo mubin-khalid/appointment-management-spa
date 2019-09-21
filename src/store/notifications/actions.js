@@ -34,6 +34,21 @@ export default {
         return (error)
       })
   },
+  getWebhooks: (context, payload) => {
+    // if (typeof payload.all !== 'undefined' && payload.all == true) {
+    //   all = true
+    // }
+    return Request({
+      method: 'get',
+      endpoint: 'webhooks?page=' + payload.page + '&per_page=' + process.env.VUE_APP_APPOINTMENTS_PER_PAGE
+    })
+      .then(response => {
+        context.commit('hooks', response.data)
+      })
+      .catch(error => {
+        return (error)
+      })
+  },
 
   updateSmsSettings:(context, payload) => {
     return Request({
@@ -43,6 +58,22 @@ export default {
       isDataRaw: true
     })
       .then(response => {
+        return response
+      })
+      .catch(error => {
+        return (error)
+      })
+  },
+  
+  storeWebhook:(context, payload) => {
+    return Request({
+      method: 'post',
+      endpoint: 'webhooks',
+      data: payload,
+      isDataRaw: true
+    })
+      .then(response => {
+        context.commit('addHook', response.data)
         return response
       })
       .catch(error => {

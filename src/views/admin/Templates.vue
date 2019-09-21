@@ -71,7 +71,7 @@
            buttonText="Save">
       <div slot="header">
         <div class="">
-          <p class="px-5">Type: <span class="font-bold capitalize">{{editTemplateType}}</span></p>
+          <p class="px-5">{{verbiage.type}}: <span class="font-bold capitalize">{{editTemplateType}}</span></p>
           <textarea name="template" id="edit_template_text" cols="50" rows="10"
                     class="focus:outline-none leading-tight mt-5 outline-none p-3 w-full resize-none"
                     v-model="editTemplateText"
@@ -94,7 +94,8 @@
              :class="[(ti !== language.templates.length-1 ? 'border-r': ''), (ti > 2 ? 'border-t' : '')]"
         >
           <div class="flex">
-            <p class="px-5 flex-1">Type: <span class="font-bold capitalize">{{template.template_type}}</span></p>
+            <p class="px-5 flex-1">{{verbiage.type}}: <span class="font-bold capitalize">{{template
+              .template_type}}</span></p>
             <span class="fa fa-edit text-blue-600 mr-3 cursor-pointer" @click="editTemplate(li, ti)"></span>
             <span class="fa fa-trash text-red-600 cursor-pointer" @click="deleteTemplate(li, ti)"></span>
           </div>
@@ -114,9 +115,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Languages: {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ 
-            props.total 
-            }}</span></span>
+          <span>
+            {{ verbiage.appointment }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -186,6 +190,9 @@
       ...mapGetters('language', {
         languages: 'getLanguagesWithTemplates',
         total: 'totalLanguagesWithTemplates',
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
       }),
       languagesForTemplates: function () {
         let filteredLanguages = {}
