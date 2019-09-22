@@ -5,19 +5,19 @@
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="activeTab ? active : inactive"
               @click="activateActive">
-        Active</span>
+        {{verbiage.active}}</span>
       </li>
       <li class="-mb-px mr-1">
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="passedTab ? active : inactive"
               @click="activatePassed"
-        >Passed</span>
+        >{{verbiage.passed}}</span>
       </li>
       <li class="-mb-px mr-1">
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="cancelledTab ? active : inactive"
               @click="activateCancelled"
-        >Cancelled</span>
+        >{{verbiage.cancelled}}</span>
       </li>
     </ul>
     <active-appointments v-if="activeTab"></active-appointments>
@@ -30,6 +30,7 @@
   import Appointments from './Appointments'
   import PassedAppointment from './PassedAppointments'
   import CancelledAppointments from './CancelledAppointments'
+  import {mapGetters} from "vuex";
 
   export default {
     name: "appointment-manager",
@@ -47,8 +48,10 @@
       'passed-appointments': PassedAppointment,
       'cancelled-appointments': CancelledAppointments
     },
-    created() {
-
+    computed: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     methods: {
       activateActive() {

@@ -6,44 +6,45 @@
         <input
           class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
-          placeholder="Jane Doe"
+          :placeholder="verbiage.name"
           aria-label="Full name"
           v-model="name"
         >
         <input
           class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
-          placeholder="jane@example.com"
+          :placeholder="verbiage.email"
           aria-label="email"
           v-model="email"
         >
         <input
           class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
-          placeholder="Phone"
+          :placeholder="verbiage.phone"
           aria-label="phone"
           v-model="phone"
         >
         <button
           class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
           type="submit"
-        >Add
+        >{{verbiage.add}}
         </button>
       </div>
     </form>
     <form action="" class="w-full bg-white rounded px-3 mb-2 shadow-2xl border-b-2 border-teal-500">
       <input type="text"
              class="appearance-none border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none mb-2"
-             placeholder="Search" v-model="searchClients">
+             :placeholder="verbiage.search" v-model="searchClients">
     </form>
     <div class="table w-full py-2 shadow-2xl rounded bg-white text-center">
       <div class="table-row flex p-4 rounded">
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex" title="Double click to edit">Name
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-md-center flex" 
+             title="Double click to edit">{{verbiage.name}}
         </div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Email</div>
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Phone</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">{{verbiage.email}}</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">{{verbiage.phone}}</div>
         <!--<div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Invite</div>-->
-        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">Actions</div>
+        <div class="table-cell bg-white text-gray-700 px-4 py-4 text-sm flex">{{verbiage.actions}}</div>
       </div>
       <div
         class="table-row flex p-4 border border-black"
@@ -116,8 +117,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Clients {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total 
-            }}</span></span>
+          <span>
+            {{ verbiage.clients }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -190,7 +195,10 @@
       ...mapGetters({
         clients: 'client/clients',
         total: 'client/total'
-      })
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     components: {
       VueAdsPagination,
