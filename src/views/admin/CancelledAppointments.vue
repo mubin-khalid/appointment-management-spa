@@ -45,7 +45,7 @@
         </div>
         <div
           class="table-cell p-3"
-        >{{ appointment.bokn }}
+        >{{ appointment.id }}
         </div>
         <div
           class="table-cell p-3"

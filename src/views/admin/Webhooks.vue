@@ -55,7 +55,7 @@
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
           <span>
-            {{ verbiage.appointment }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            {{ verbiage.webhooks }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
             <span class="font-bold text-teal-600">
               {{ props.total}}
             </span>

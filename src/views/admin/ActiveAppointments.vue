@@ -56,7 +56,7 @@
         </div>
         <div
           class="table-cell p-3"
-        >{{ appointment.bokn }}
+        >{{ appointment.id }}
         </div>
         <div class="table-cell p-3">
           <i class="fa fa-eye text-teal-600 cursor-pointer"
@@ -165,7 +165,7 @@
             appointment.appointment_date +
             '<br /><span class = "font-bold">  ' + this.verbiage.appointment + this.verbiage.time + '</span>: ' +
             appointment.appointment_time +
-            '<br /><span class = "font-bold">  ' + this.verbiage.booking_id + ' </span>: ' + appointment.bokn,
+            '<br /><span class = "font-bold">  ' + this.verbiage.booking_id + ' </span>: ' + appointment.id,
         })
       },
     },
