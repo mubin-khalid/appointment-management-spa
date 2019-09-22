@@ -43,7 +43,7 @@
           type="text"
           placeholder="Facility Address"
           aria-label="facility"
-          v-model="facility"
+          v-model="facility_address"
         >
         <span class="font-hairline text-gray-700 mr-2">
           {{verbiage.licensed}}
