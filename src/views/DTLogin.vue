@@ -8,7 +8,6 @@
   import Popup from '@/mixins/Popup'
   import {mapActions, mapGetters} from 'vuex'
   import VueElementLoading from 'vue-element-loading'
-  import ModalComponent from '@/components/ModalComponent'
   
   export default {
     name: "DTLogin",
@@ -50,10 +49,6 @@
     },
     methods: {
       ...mapActions('auth', ['DTLogin', 'getUser',]),
-      
-      loginWithDT() {
-        window.location.href = process.env.VUE_APP_API_DOMAIN + '/' + 'dt-auth'
-      }
     },
   }
 </script>
