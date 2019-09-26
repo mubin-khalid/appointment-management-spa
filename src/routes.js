@@ -2,6 +2,7 @@ import Logout from '@/views/Logout';
 import Clients from '@/views/Clients';
 import Register from '@/views/Register';
 import Login from '@/views/Login';
+import DTLogin from '@/views/DTLogin';
 import Settings from '@/views/Settings';
 import SendInvite from '@/views/SendInvite';
 import NotFound from '@/views/404';
@@ -96,6 +97,14 @@ const routes = [
     component: ResetPassword,
     meta: {
       requiresAuth: false, layout: 'guest-appointment'
+    }
+  },
+  {
+    path: '/:id/login',
+    name: 'dtLogin',
+    component: DTLogin,
+    meta: {
+      requiresAuth: false
     }
   },
   {path: '/404', component: NotFound, 'name': 'NotFound'},
