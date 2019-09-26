@@ -22,14 +22,15 @@
         </div>
         <div class="flex items-center justify-between">
           <input type="submit" :value="verbiage.sign_in"
-                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+                 class="bg-blue-500 cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
 
-
-          <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#" 
-             @click="showForgetPasswordModal=true">
-            Forgot Password?
-          </a>
+          <input type="button" value="DT Login"
+                 class="bg-teal-600 cursor-pointer hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="loginWithDT"/>
         </div>
+        <a class="mt-3 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#"
+           @click="showForgetPasswordModal=true">
+          Forgot Password?
+        </a>
       </form>
     </div>
     <modal v-if="showForgetPasswordModal" width="w-1/3" height="h-auto" @close="sendEmail" 
@@ -122,6 +123,10 @@
             this.popup(error.response.data.message, 'error', 3000)
             this.password = ''
           })
+      },
+      
+      loginWithDT() {
+        window.location.href = process.env.VUE_APP_API_DOMAIN + '/' + 'dt-auth'
       }
     },
   }
