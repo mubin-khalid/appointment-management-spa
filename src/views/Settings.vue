@@ -16,6 +16,7 @@
   import AppointmentManager from './AppointmentManager'
   import Notification from './Notification'
   import Password from './Password'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "Settings",
@@ -24,6 +25,11 @@
       'appointments': AppointmentManager,
       Notification,
       Password
+    },
+    computed: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     data() {
       return {

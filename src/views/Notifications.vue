@@ -3,11 +3,11 @@
     <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
     <div class="table w-full border-blue-800 border-t-4 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-lg text-white">
-        <div class="table-cell p-4">Client Name</div>
-        <div class="table-cell p-4">Client Email</div>
-        <div class="table-cell p-4">Client Phone</div>
-        <div class="table-cell p-4">Notification</div>
-        <div class="table-cell p-4">Notification Type</div>
+        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.name}}</div>
+        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.email}}</div>
+        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.phon}}</div>
+        <div class="table-cell p-4">{{verbiage.notifications}}</div>
+        <div class="table-cell p-4">{{verbiage.notifications}} {{verbiage.type}}</div>
       </div>
       <div
         class="table-row p-4 text-center text-sm text-gray-700"
@@ -51,7 +51,12 @@
     >
       <template slot-scope="props">
         <div class="vue-ads-pr-2 vue-ads-leading-loose">
-          <span>Appointment {{ props.start }} to {{ props.end }} from <span class="font-bold text-teal-600">{{ props.total }}</span></span>
+          <span>
+            {{ verbiage.notifications }} {{ props.start }} {{verbiage.to}} {{ props.end }} {{verbiage.from}} 
+            <span class="font-bold text-teal-600">
+              {{ props.total}}
+            </span>
+          </span>
         </div>
       </template>
       <template
@@ -97,6 +102,9 @@
         'notifications',
         'total'
       ]),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     methods: {
       ...mapActions('notifications', [

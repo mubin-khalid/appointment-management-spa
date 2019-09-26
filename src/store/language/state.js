@@ -2,5 +2,6 @@ export default {
   languages: [],
   languagesWithTemplates: [],
   totalLanguagesWithTemplates: 1,
-  paginatedLanguages: {}
+  paginatedLanguages: {},
+  paginatedLanguagesTotal: 1
 }

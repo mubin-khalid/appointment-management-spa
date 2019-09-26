@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-white m-auto p-6 rounded shadow-2xl w-1/3">
+  <div class="bg-white lg:w-1/3 m-auto md:text-left md:w-1/2 p-6 rounded shadow-2xl sm:text-center w-full">
     <vue-element-loading :active="show" spinner="ring" is-full-screen color="#38b2ac"/>
-    <form class="w-full max-w-lg" @submit.prevent>
+    <form class="m-auto max-w-lg w-full" @submit.prevent>
       <div class="flex flex-wrap -mx-3">
         <div class="w-full px-3 md:mb-2 mb-2">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="language">
-            Language
+            {{verbiage.languages}}
           </label>
           <language id="language"></language>
         </div>
@@ -13,7 +13,7 @@
       <div class="flex flex-wrap -mx-3 mb-3">
         <div class="w-full md:w-1/2 px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="date">
-            Date
+            {{verbiage.date}}
           </label>
           <input
             class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 hover:border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -21,7 +21,7 @@
         </div>
         <div class="w-full md:w-1/2 px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time">
-            Time
+            {{ verbiage.time }}
           </label>
           <input
             class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 hover:border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -32,7 +32,7 @@
         <div class="w-full px-3 md:mb-0">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                  for="client_phone">
-            Client phone number
+            {{ verbiage.client }} {{ verbiage.phone }}
           </label>
           <select
             class="appearance-none w-10/12 bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"
@@ -52,7 +52,7 @@
       <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full md:w-full px-3">
           <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="cancel_via_text">
-            Receive cancel notification via SMS
+            {{verbiage.sms_notification}}
           </label>
           <input
             class="ml-2"
@@ -63,7 +63,7 @@
       <div class="flex flex-wrap -mx-3 mb-6" v-if="cancelViaText">
         <div class="w-full md:w-full px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="cancel_phone">
-            Phone # to receive notification.
+            {{ verbiage.phone_for_notification }}
           </label>
           <input
             class="appearance-none block w-full bg-gray-200 text-gray-700 hover:border-gray-500 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -74,7 +74,7 @@
       <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full md:w-full px-3">
           <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="cancel_email_notification">
-            Receive cancel notification via Email
+            {{ verbiage.email_notification }}
           </label>
           <input
             class="ml-2"
@@ -85,7 +85,7 @@
       <div class="flex flex-wrap -mx-3 mb-6" v-if="cancelEmail">
         <div class="w-full md:w-full px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="cancel_phone">
-            Email to receive notification.
+            {{ verbiage.email_for_notification}}
           </label>
           <input
             class="appearance-none block w-full bg-gray-200 text-gray-700 hover:border-gray-500 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -105,7 +105,7 @@
         </div>
         <div class="w-full md:w-1/2 px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="ta">
-            translation agency
+            {{ verbiage.ta }}
           </label>
           <select
             class="block appearance-none w-full bg-gray-200 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-2"
@@ -124,7 +124,7 @@
           <div class="flex justify-between">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                    for="message">
-              Message (<span class="font-hairline">Max 150.</span>)
+              {{ verbiage.message }} (<span class="font-hairline">{{ verbiage.max }} 150.</span>)
             </label>
             <span class="font-bold right-0 text-sm mr-1" :class="messageLengthClass">{{ messageLength }}</span>
           </div>
@@ -138,7 +138,7 @@
         <div class="w-full px-3 mb-6 md:mb-0">
           <button
             class="w-full appearance-none block w-full bg-blue-500 text-white border rounded hover:border-blue-900 py-3 px-4 mb-3 leading-tight focus:outline-none"
-            @click="saveAppointment">Send
+            @click="saveAppointment">{{ verbiage.send }}
           </button>
         </div>
       </div>
@@ -159,6 +159,11 @@
                placeholder="Phone" v-model="newClient.phone">
       </div>
     </modal>
+    <confirm v-if="showConfirmNotification" width="w-1/3" height="h-auto" @dismiss="showConfirmNotification=false">
+      <div slot="number">
+        {{appointmentId}}
+      </div>
+    </confirm>
   </div>
 </template>
 
@@ -169,7 +174,7 @@
   import {mapActions, mapGetters} from 'vuex'
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import ModalComponent from '@/components/ModalComponent'
-
+  import BookingConfirmationComponent from '@/components/BookingConfirmationComponent'
 
   export default {
     name: "send-invite",
@@ -178,6 +183,8 @@
       'language': LanguageComponent,
       VueElementLoading,
       'modal': ModalComponent,
+      'confirm': BookingConfirmationComponent
+      
     },
     created() {
       if (this.isAdmin) {
@@ -202,6 +209,8 @@
     },
     data() {
       return {
+        showConfirmNotification: false,
+        appointmentId: null,
         language: '0',
         date: new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
           new Date().getDate()).slice(-2),
@@ -230,6 +239,9 @@
         clients: 'client/clients',
         user: 'auth/user',
         isAdmin: 'auth/isAdmin',
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
       }),
       messageLength() {
         return this.message.length
@@ -316,7 +328,7 @@
           phone: this.customerPhone,
           enable_email_cancel: this.cancelEmail,
           email: this.email
-        }).then(() => {
+        }).then((appointment) => {
           this.popup('Appointment booked', 'success', 2000)
           this.show = false
           this.language = '0'
@@ -333,6 +345,8 @@
           this.customerPhone = ''
           this.cancelEmail = 0
           this.email = ''
+          this.showConfirmNotification = true
+          this.appointmentId = appointment.id
         })
       }
     },

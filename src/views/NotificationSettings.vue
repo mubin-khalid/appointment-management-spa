@@ -54,7 +54,10 @@
     computed: {
       ...mapGetters('notifications', {
         notificationSettings:'notificationSettings',
-      })
+      }),
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     
     methods: {

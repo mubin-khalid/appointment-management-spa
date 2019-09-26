@@ -21,9 +21,9 @@
                         d="M12 21V5a5 5 0 0 1 4-2h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4.34a2 2 0 0 0-1.42.59l-.83.82A2 2 0 0 1 12 21z"/>
                 </svg>
                 <span
-                  class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600"
+                  class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600 capitalize"
                   :class="{active: element == 'appointment'}"
-                  @click="loadAppointments">Appointments</span>
+                  @click="loadAppointments">{{ verbiage.appointments }}</span>
               </span>
             <span
               class="mt-3 lg:mt-1 flex items-center px-2 -mx-2 py-1">
@@ -37,7 +37,7 @@
                   :class="{active: element == 'notifications'}"
                   @click="loadNotifications"
                   class="ml-3 hover:text-gray-900 font-medium text-gray-600 cursor-pointer hover:font-bold hover:text-teal-600">
-                  Notifications
+                  {{ verbiage.notifications }}
                 </span>
               </span>
           </div>
@@ -55,7 +55,7 @@
                       :class="{active: element == 'password'}"
                       @click="changePassword">
                       <i class="fa fa-key mr-1"></i>
-                      Change Password
+                      {{ verbiage.change }} {{ verbiage.password }}
                     </span>
                   </span>
               </li>
@@ -65,7 +65,7 @@
               <router-link :to="{name: 'logout'}"
                            class="text-red-700 text-sm w-1 align-middle font-bold">
                 <i class="fa fa-sign-out-alt mr-1"></i>
-                Logout
+                {{ verbiage.logout }}
               </router-link>
             </div>
           </div>
@@ -76,8 +76,15 @@
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     name: "SidebarComponent",
+    computed: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
+    },
     data() {
       return {
         element: 'appointment',

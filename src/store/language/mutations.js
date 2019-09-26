@@ -1,6 +1,7 @@
 export default {
   setLanguages: (state, languages) => state.languages = languages,
   setPaginatedLanguages: (state, paginatedLanguages) => state.paginatedLanguages = paginatedLanguages,
+  setTotalPaginatedLanguages: (state, total) => state.paginatedLanguagesTotal = total,
   setLanguagesWithTemplates: (state, response) => state.languagesWithTemplates = response,
   setLanguagesWithTemplatesTotal: (state, total) => state.totalLanguagesWithTemplates = total,
   updateLanguage(state, languageData) {

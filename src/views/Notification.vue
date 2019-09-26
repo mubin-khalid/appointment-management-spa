@@ -5,13 +5,13 @@
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="notificationsTab ? active : inactive"
               @click="activateNotifications">
-        Notifications</span>
+        {{verbiage.notifications}}</span>
       </li>
       <li class="-mb-px mr-1">
         <span class="bg-white inline-block py-2 px-4 font-semibold cursor-pointer"
               :class="notificationSettingTab ? active : inactive"
               @click="activateNotificationSettings"
-        >Settings</span>
+        >{{verbiage.settings}}</span>
       </li>
     </ul>
     <notifications v-if="notificationsTab" class="mt-6"></notifications>
@@ -21,6 +21,7 @@
 <script>
   import Notifications from './Notifications'
   import NotificationSettings from './NotificationSettings'
+  import {mapGetters} from "vuex";
 
   export default {
     name: "notification",
@@ -35,6 +36,11 @@
     components: {
       'notifications': Notifications,
       'notification-settings': NotificationSettings
+    },
+    computed: {
+      ...mapGetters('verbiage', {
+        verbiage: 'verbiage'
+      }),
     },
     created() {
 
