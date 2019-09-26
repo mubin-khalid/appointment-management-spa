@@ -17,6 +17,22 @@ export default {
         return false
       })
   },
+  DTLogin(context, credentials) {
+    return Request({
+      method: 'post',
+      endpoint: 'dt-login',
+      data: credentials,
+      isDataRaw: true
+    }).then(response => {
+      const token = response.access_token
+      localStorage.setItem('access_token', token)
+      context.commit('setToken', token)
+      return true
+    })
+      .catch(() => {
+        return false
+      })
+  },
   logout({commit, rootState}) {
     Request({
       method: 'post',
