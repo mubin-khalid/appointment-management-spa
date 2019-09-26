@@ -97,8 +97,18 @@
       eventBus.$on('resetMenuButton', () => {
         this.hidden = !this.hidden
       })
+      let locale = null
+      let host = window.location.host
+      if(host.indexOf('user') >= 0 || host.indexOf('localhost') >= 0) {
+        locale = 'en'
+      }else if(host.indexOf('english') >= 0) {
+        locale = 'en'
+      } else if(host.indexOf('swedish') >= 0) {
+        locale = 'se'
+      }
+      
       this.verbiage({
-        languageCode: this.locale || 'en'
+        languageCode: locale || 'en'
       })
     },
     computed: {

@@ -112,6 +112,7 @@ export default {
       endpoint: 'languages?' + 'per_page=' + payload.per_page + '&page=' + payload.page
     }).then(response => {
       context.commit('setPaginatedLanguages', response.data.languages)
+      context.commit('setTotalPaginatedLanguages', response.data.total)
     })
       .catch(error => {
         return (error)

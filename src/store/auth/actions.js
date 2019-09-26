@@ -47,7 +47,19 @@ export default {
       return error.message
     })
   },
-
+  sendPasswordResetEmail(context, payload) {
+    return Request({
+      method: 'post',
+      endpoint: 'reset-password',
+      data: payload,
+      isDataRaw: true
+    }).then(() => {
+      return true
+    })
+      .catch(() => {
+        return false
+      })
+  },
   setBaseAppState({rootState}) {
 
     rootState.translation_agencies = {}

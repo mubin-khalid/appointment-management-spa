@@ -159,6 +159,11 @@
                placeholder="Phone" v-model="newClient.phone">
       </div>
     </modal>
+    <confirm v-if="showConfirmNotification" width="w-1/3" height="h-auto" @dismiss="showConfirmNotification=false">
+      <div slot="number">
+        {{appointmentId}}
+      </div>
+    </confirm>
   </div>
 </template>
 
@@ -169,7 +174,7 @@
   import {mapActions, mapGetters} from 'vuex'
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import ModalComponent from '@/components/ModalComponent'
-
+  import BookingConfirmationComponent from '@/components/BookingConfirmationComponent'
 
   export default {
     name: "send-invite",
@@ -178,6 +183,8 @@
       'language': LanguageComponent,
       VueElementLoading,
       'modal': ModalComponent,
+      'confirm': BookingConfirmationComponent
+      
     },
     created() {
       if (this.isAdmin) {
@@ -202,6 +209,8 @@
     },
     data() {
       return {
+        showConfirmNotification: false,
+        appointmentId: null,
         language: '0',
         date: new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
           new Date().getDate()).slice(-2),
@@ -319,7 +328,7 @@
           phone: this.customerPhone,
           enable_email_cancel: this.cancelEmail,
           email: this.email
-        }).then(() => {
+        }).then((appointment) => {
           this.popup('Appointment booked', 'success', 2000)
           this.show = false
           this.language = '0'
@@ -336,6 +345,8 @@
           this.customerPhone = ''
           this.cancelEmail = 0
           this.email = ''
+          this.showConfirmNotification = true
+          this.appointmentId = appointment.id
         })
       }
     },
