@@ -10,5 +10,8 @@ export default {
   },
   getPaginatedLanguages: state => {
     return state.paginatedLanguages
+  },
+  getPaginatedLanguagesCount: state => {
+    return state.paginatedLanguagesTotal
   }
 }
