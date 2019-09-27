@@ -1,6 +1,26 @@
 <template>
   <div class="w-full">
     <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
+    <div class="mt-4 mb-4 flex">
+      <div class="flex-1">
+        <input type="text"
+               class="w-full appearance-none hover:appearance-none bg-gray-200 text-gray-700 p-2 outline-none focus:outline-none border-b-2 border-teal-600 rounded"
+               v-model="search"
+               :placeholder="verbiage.search"
+        >
+      </div>
+      <div class="w-1/3">
+        <select name="search_type" id="search_type" v-model="searchType"
+                class="w-full appearance-none hover:appearance-none bg-gray-200 text-gray-700 p-2 outline-none focus:outline-none border-b-2 border-teal-600 rounded ml-8">
+          <option value="id">{{verbiage.booking_id}}</option>
+          <option value="phone">{{ verbiage.client }} {{ verbiage.phone }}</option>
+          <option value="email">{{ verbiage.client }} {{ verbiage.email }}</option>
+          <option value="name">{{ verbiage.client }} {{ verbiage.name }}</option>
+          <option value="date">{{ verbiage.appointment }} {{ verbiage.date }}</option>
+          <option value="time">{{ verbiage.appointment }} {{ verbiage.time }}</option>
+        </select>
+      </div>
+    </div>
     <div class="table w-full mt-2 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-sm text-white rounded">
         <div class="table-cell p-3">{{ verbiage.client }} {{ verbiage.name }}</div>
@@ -41,11 +61,11 @@
         </div>
         <div
           class="table-cell px-4 py-2"
-        >{{ appointment.id }}
+        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
         </div>
         <div
           class="table-cell px-4 py-2"
-        >{{ (appointment.reminder_sent == '1') ? 'Yes' : 'No' }}
+        >{{ appointment.id }}
         </div>
         <div class="table-cell px-4 py-2">
           <i class="fa fa-eye mr-3 text-lg text-blue-600 hover:text-blue-700 cursor-pointer"
@@ -102,7 +122,26 @@
       return {
         loading: false,
         page: 0,
-        show: false
+        show: false,
+        search: '',
+        searchType: 'id',
+      }
+    },
+    watch: {
+      search(value) {
+        this.show = true
+        this.loading = true
+
+        this.loadAppointments({
+          page: this.page,
+          all: false,
+          type: 'passed',
+          queryType: this.searchType,
+          query: value,
+        }).then(() => {
+          this.show = false
+          this.loading = false
+        })
       }
     },
     components: {
@@ -119,8 +158,14 @@
         verbiage: 'verbiage'
       }),
       filteredAppointment: function () {
-        if(this.total > 0) {
-          return this.appointments
+        let filtered = []
+        if (this.total > 0) {
+          Object.keys(this.appointments).forEach((key) => {
+            if (typeof this.appointments[key].client !== 'undefined' || this.appointments[key].client != null) {
+              filtered.push(this.appointments[key])
+            }
+          })
+          return filtered
         }
         return {}
       }
@@ -139,7 +184,9 @@
         this.loadAppointments({
           page: this.page,
           all: false,
-          type: 'passed'
+          type: 'passed',
+          queryType: this.searchType,
+          query: this.search,
         }).then(() => {
           this.show = false
           this.loading = false

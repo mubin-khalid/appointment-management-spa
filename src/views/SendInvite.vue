@@ -184,7 +184,7 @@
       VueElementLoading,
       'modal': ModalComponent,
       'confirm': BookingConfirmationComponent
-      
+
     },
     created() {
       if (this.isAdmin) {
@@ -278,6 +278,11 @@
 
       saveClient() {
         this.showAddClient = false
+        if (this.newClient.name.trim() == '' ||
+          this.newClient.phone.trim() == '' ||
+          this.newClient.email.trim() == '') {
+          return
+        }
         this.show = true
         this.addClient({
           name: this.newClient.name,
@@ -290,9 +295,10 @@
           this.newClient.email = ''
           this.show = false
           this.popup('Client added', 'success', 2000)
-        }).catch(() => {
+        }).catch((e) => {
           this.show = false
-          this.popup('Something went wrong', 'error', 3000)
+          console.log(e)
+          this.popup(e.message, 'error', 3000)
         })
       },
       saveAppointment() {

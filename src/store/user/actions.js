@@ -57,8 +57,8 @@ export default {
       context.commit('addUser', response.data)
       return (response)
     })
-      .catch((response) => {
-        return Promise.reject(response)
+      .catch((error) => {
+        return Promise.reject(error)
       })
   },
   updateUser(context, payload) {
