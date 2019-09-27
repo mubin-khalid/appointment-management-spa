@@ -46,12 +46,18 @@
         showLanguageComponent: false,
       }
     },
-    computer: {
+    computed: {
       ...mapGetters('verbiage', {
         verbiage: 'verbiage'
       }),
+      ...mapGetters('auth', {
+        isAdmin: 'isAdmin',
+      })
     },
     created() {
+      if(!this.isAdmin) {
+        this.$router.push({name: 'invite'})
+      }
       eventBus.$on('loadAppointments', () => {
         this.showAppointmentsComponent = true
         this.showTaComponent = false

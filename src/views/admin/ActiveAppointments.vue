@@ -1,6 +1,24 @@
 <template>
   <div class="w-full">
     <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
+    <div class="mt-4 mb-4 flex">
+      <div class="flex-1">
+        <input type="text"
+               class="w-full appearance-none hover:appearance-none bg-gray-200 text-gray-700 p-2 outline-none focus:outline-none border-b-2 border-teal-600 rounded" v-model="search" :placeholder="verbiage.search">
+      </div>
+      <div class="w-1/3">
+        <select name="search_type" id="search_type" v-model="searchType"
+                class="w-full appearance-none hover:appearance-none bg-gray-200 text-gray-700 p-2 outline-none focus:outline-none border-b-2 border-teal-600 rounded ml-8">
+          <option value="id">{{verbiage.booking_id}}</option>
+          <option value="user_name">{{ verbiage.customer }} {{ verbiage.name }}</option>
+          <option value="phone">{{ verbiage.client }} {{ verbiage.phone }}</option>
+          <option value="email">{{ verbiage.client }} {{ verbiage.email }}</option>
+          <option value="name">{{ verbiage.client }} {{ verbiage.name }}</option>
+          <option value="date">{{ verbiage.appointment }} {{ verbiage.date }}</option>
+          <option value="time">{{ verbiage.appointment }} {{ verbiage.time }}</option>
+        </select>
+      </div>
+    </div>
     <div class="rounded shadow-2xl table w-full">
       <div class="table-row p-4 text-center font-bold text-gray-700 text-sm">
         <div class="table-cell p-3">{{ verbiage.customer }} {{ verbiage.name }}</div>
@@ -111,7 +129,9 @@
       return {
         loading: false,
         page: 0,
-        show: false
+        show: false,
+        search: '',
+        searchType: 'id',
       }
     },
     components: {
@@ -128,10 +148,33 @@
         verbiage: 'verbiage'
       }),
       filteredAppointment: function () {
+        let filtered = []
         if (this.total > 0) {
-          return this.appointments
+          Object.keys(this.appointments).forEach((key) => {
+            if (typeof this.appointments[key].client !== 'undefined' || this.appointments[key].client != null) {
+              filtered.push(this.appointments[key])
+            }
+          })
+          return filtered
         }
         return {}
+      }
+    },
+    watch: {
+      search(value) {
+        this.show = true
+        this.loading = true
+
+        this.loadAppointments({
+          page: this.page,
+          all: true,
+          type: 'active',
+          queryType: this.searchType,
+          query: value,
+        }).then(() => {
+          this.show = false
+          this.loading = false
+        })
       }
     },
     methods: {
@@ -148,7 +191,9 @@
         this.loadAppointments({
           page: this.page,
           all: true,
-          type: 'active'
+          type: 'active',
+          queryType: this.searchType,
+          query: this.search,
         }).then(() => {
           this.show = false
           this.loading = false

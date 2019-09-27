@@ -39,7 +39,7 @@ export default {
       return response.data
     })
       .catch(error => {
-        return error.methods
+        throw new Error(error.response.data.message)
       })
   },
   editClient(context, payload) {
