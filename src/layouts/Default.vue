@@ -103,7 +103,7 @@
         locale = 'en'
       }else if(host.indexOf('english') >= 0) {
         locale = 'en'
-      } else if(host.indexOf('swedish') >= 0) {
+      } else if(host.indexOf('svenska') >= 0) {
         locale = 'se'
       }
       

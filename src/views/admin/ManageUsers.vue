@@ -306,12 +306,16 @@
           is_admin: this.isAdmin ? 1 : 0,
         }).then(() => {
           this.popup('User: ' + this.name + ' added.', 'success', 2000)
-          this.name = this.password = this.email = this.phone = this.facility = ''
+          this.name = this.password = this.email = this.phone = this.facility = this.facility_address = ''
           this.licensed = this.isAdmin = false
           this.show = false
         }).catch((error) => {
           this.show = false
-          this.popup(error.message, 'error', 2000)
+          Object.keys(error.response.data.errors).forEach((key) => {
+           this.popup(error.response.data.errors[key][0], 'error', 3000)
+           return
+          })
+          //this.popup(error.message, 'error', 2000)
         })
       },
       rangeChange() {

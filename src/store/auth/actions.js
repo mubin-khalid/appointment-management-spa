@@ -13,8 +13,8 @@ export default {
       context.commit('setToken', token)
       return true
     })
-      .catch(() => {
-        return false
+      .catch((error) => {
+        return Promise.reject(error)
       })
   },
   DTLogin(context, credentials) {

@@ -101,12 +101,6 @@
           password: this.password,
         })
           .then(response => {
-            if (!response) {
-              this.popup('Invalid Credentials', 'error', 3000)
-              this.password = ''
-              this.show = false
-              return
-            }
             this.show = false
             this.popup('Logged in successfully', 'success', 2000)
             this.getUser().then(() => {
