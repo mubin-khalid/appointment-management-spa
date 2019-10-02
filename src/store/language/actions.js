@@ -126,11 +126,12 @@ export default {
       isDataRaw: true
     }).then(response => {
 
-      return (response.data.template)
+      if(typeof response.data !== 'undefined' && typeof response.data.template !== 'undefined' ) {
+        return (response.data.template)
+      } else {
+        return 'Please select language.'
+      }
     })
-      .catch(error => {
-        return (error)
-      })
   },
   
   loadLanguageWithTemplates(context, payload) {
