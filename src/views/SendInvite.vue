@@ -273,14 +273,13 @@
         }).then((template) => {
           this.message = template
           this.show = false
-        })
+        })  
       },
 
       saveClient() {
         this.showAddClient = false
         if (this.newClient.name.trim() == '' ||
-          this.newClient.phone.trim() == '' ||
-          this.newClient.email.trim() == '') {
+          this.newClient.phone.trim() == '') {
           return
         }
         this.show = true
@@ -297,7 +296,6 @@
           this.popup('Client added', 'success', 2000)
         }).catch((e) => {
           this.show = false
-          console.log(e)
           this.popup(e.message, 'error', 3000)
         })
       },
