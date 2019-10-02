@@ -5,6 +5,9 @@ export default {
     state.clients.splice(index, 1)
     state.total -= 1
   },
-  addClient: (state, client) => state.clients.push(client),
+  addClient: (state, client) => {
+    state.clients.push(client)
+    state.total += 1
+  },
   editClient: (state, data) => state.clients[data.index].name = data.name,
 }
