@@ -4,9 +4,11 @@
     <div class="bg-white m-auto max-w-2xl overflow-hidden rounded shadow-lg">
 
       <div class="px-6 py-4">
+        <div class="bg-white m-auto max-w-sm overflow-hidden" v-html="details"
+             v-if="disable=='hidden'"></div>
         <button
           class="appearance-none bg-blue-600 cursor-pointer h-22 hover:bg-blue-700 inline-block mt-10 mb-4 p-2 rounded text-2xl text-white w-10/12 focus:outline-none outline-none"
-          @click="viewDetail"
+          @click="viewDetail" :class='disable'
         >
           {{ viewDetailsButton }}
         </button>
