@@ -25,8 +25,8 @@
         <div class="table-cell p-3">{{ verbiage.client }} {{ verbiage.phone }}</div>
         <div class="table-cell p-3">{{ verbiage.appointment }} {{ verbiage.date }}</div>
         <div class="table-cell p-3">{{ verbiage.appointment }} {{ verbiage.time }}</div>
-        <div class="table-cell p-3">{{ verbiage.reminder_sent }}</div>
         <div class="table-cell p-3">{{ verbiage.booking_id }}</div>
+        <div class="table-cell p-3">{{ verbiage.reminder_sent }}</div>
         <div class="table-cell p-3">{{ verbiage.actions }}</div>
       </div>
       <div
