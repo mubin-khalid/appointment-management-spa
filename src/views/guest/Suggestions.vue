@@ -15,20 +15,20 @@
         </div>
         <div class="mb-3">
           <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date1">
+                 v-model="date1" :min="cachedDateTime.date1">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
                  :class="time1Class" v-model="time1"
           >
         </div>
         <div class="mb-3">
           <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date2">
+                 v-model="date2" :min="cachedDateTime.date2">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
                  :class="time2Class" v-model="time2">
         </div>
         <div class="mb-3">
           <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date3">
+                 v-model="date3" :min="cachedDateTime.date3">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
                  :class="time3Class" v-model="time3">
         </div>
@@ -83,23 +83,30 @@
       }
     },
     created() {
-      this.cachedDateTime.date1 = this.date1 = new Date().getFullYear() + "-" +
-        ('0' + (new Date().getMonth() + 1)).slice(-2)
-        + '-' +
-        ('0' +
-          new Date().getDate()).slice(-2),
+      let currentDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+      let day = currentDate.getDate() >= 10 ? currentDate.getDate() : '0' + currentDate.getDate()
+      let month = currentDate.getMonth() + 1 >= 10 ? currentDate.getMonth() + 1 : '0' + currentDate.getMonth() + 1
+      let year = currentDate.getFullYear()
+      this.cachedDateTime.date1  = 
+        this.cachedDateTime.date2 = 
+          this.cachedDateTime.date3 =  `${year}-${month}-${day}`
+      // this.cachedDateTime.date1 = this.date1 = new Date().getFullYear() + "-" +
+      //   ('0' + (new Date().getMonth() + 1)).slice(-2)
+      //   + '-' +
+      //   ('0' +
+      //     new Date().getDate()).slice(-2),
         // this.cachedDateTime.time1 = this.time1 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
         //   new Date().getMinutes()).slice(-2) +
         //   ':00',
-        this.cachedDateTime.date2 = this.date2 = new Date().getFullYear() + "-" +
-          ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
-            new Date().getDate()).slice(-2),
+        // this.cachedDateTime.date2 = this.date2 = new Date().getFullYear() + "-" +
+        //   ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
+        //     new Date().getDate()).slice(-2),
         // this.cachedDateTime.time2 = this.time2 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
         //   new Date().getMinutes()).slice(-2) +
         //   ':00',
-        this.cachedDateTime.date3 = this.date3 = new Date().getFullYear() + "-" +
-          ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
-            new Date().getDate()).slice(-2),
+        // this.cachedDateTime.date3 = this.date3 = new Date().getFullYear() + "-" +
+        //   ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
+        //     new Date().getDate()).slice(-2),
         // this.cachedDateTime.time3 = this.time3 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
         //   new Date().getMinutes()).slice(-2) +
         //   ':00',
@@ -158,8 +165,8 @@
 
       suggestNewTimings() {
 
-        if (this.date1 == this.cachedDateTime.date1 && this.time1 == this.cachedDateTime.time1) {
-          this.popup('Please fill in at least one date and time.', 'error', 3000)
+        if (this.date1 == null || this.time1 == null) {
+          this.popup('Please fill in at least first date and time.', 'error', 3000)
           return
         }
 
