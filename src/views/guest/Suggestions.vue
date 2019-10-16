@@ -14,16 +14,23 @@
         <div class="text-sm text-gray-700 mb-4">{{ cancelNote }}
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2" v-model="date1">
-          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10" v-model="time1">
+          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date1">
+          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
+                 :class="time1Class" v-model="time1"
+          >
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2" v-model="date2">
-          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10" v-model="time2">
+          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date2">
+          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
+                 :class="time2Class" v-model="time2">
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2" v-model="date3">
-          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10" v-model="time3">
+          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date3">
+          <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
+                 :class="time3Class" v-model="time3">
         </div>
         <button
           class="outline-none focus:outline-none bg-teal-500 hover:bg-teal-600 text-white font-bold p-2 rounded"
@@ -51,7 +58,12 @@
         cancelNote: 'Note: Appointment will be cancelled automatically after suggestions.',
         suggestButtonText: 'Suggest',
         suggested: false,
+        error: false,
         show: false,
+        time1Class: '',
+        time2Class: '',
+        time3Class: '',
+        timeRegex: /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/i,
         suggestions: false,
         showSuggestions: false,
         cachedDateTime: {
@@ -76,21 +88,21 @@
         + '-' +
         ('0' +
           new Date().getDate()).slice(-2),
-        this.cachedDateTime.time1 = this.time1 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-          new Date().getMinutes()).slice(-2) +
-          ':00',
+        // this.cachedDateTime.time1 = this.time1 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
+        //   new Date().getMinutes()).slice(-2) +
+        //   ':00',
         this.cachedDateTime.date2 = this.date2 = new Date().getFullYear() + "-" +
           ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
             new Date().getDate()).slice(-2),
-        this.cachedDateTime.time2 = this.time2 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-          new Date().getMinutes()).slice(-2) +
-          ':00',
+        // this.cachedDateTime.time2 = this.time2 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
+        //   new Date().getMinutes()).slice(-2) +
+        //   ':00',
         this.cachedDateTime.date3 = this.date3 = new Date().getFullYear() + "-" +
           ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
             new Date().getDate()).slice(-2),
-        this.cachedDateTime.time3 = this.time3 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-          new Date().getMinutes()).slice(-2) +
-          ':00',
+        // this.cachedDateTime.time3 = this.time3 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
+        //   new Date().getMinutes()).slice(-2) +
+        //   ':00',
         this.get({
           id: this.$route.params.id
         }).then(response => {
@@ -109,6 +121,35 @@
           this.$router.push({name: 'NotFound'})
         })
     },
+    watch: {
+      time1(newTime) {
+        if (!this.timeRegex.test(newTime)) {
+          this.time1Class = 'border border-red-600'
+          this.error = true
+        } else {
+          this.error = false
+          this.time1Class = 'border-0'
+        }
+      },
+      time2(newTime) {
+        if (!this.timeRegex.test(newTime)) {
+          this.time2Class = 'border border-red-600'
+          this.error = true
+        } else {
+          this.error = false
+          this.time2Class = 'border-0'
+        }
+      },
+      time3(newTime) {
+        if (!this.timeRegex.test(newTime)) {
+          this.time3Class = 'border border-red-600'
+          this.error = true
+        } else {
+          this.error = false
+          this.time3Class = 'border-0'
+        }
+      }
+    },
     methods: {
       ...mapActions('appointment', [
         'get',
@@ -116,13 +157,17 @@
       ]),
 
       suggestNewTimings() {
-        //this.show = true
-        if ((this.date1 == this.cachedDateTime.date1 && this.time1 == this.cachedDateTime.time1) ||
-          (this.date2 == this.cachedDateTime.date2 && this.time2 == this.cachedDateTime.time3) ||
-          (this.date3 == this.cachedDateTime.date3 && this.time3 == this.cachedDateTime.time3)) {
-          this.popup('Please fill in all of the suggested dates and times.', 'error', 3000)
+
+        if (this.date1 == this.cachedDateTime.date1 && this.time1 == this.cachedDateTime.time1) {
+          this.popup('Please fill in at least one date and time.', 'error', 3000)
           return
         }
+
+        if (this.error) {
+          this.popup('Please input valid time. Format(24 hours): HH:MM', 'error', 3000)
+          return
+        }
+        this.show = true
         this.suggestTime({
           id: this.$route.params.id,
           cancelled_by: 'client',
