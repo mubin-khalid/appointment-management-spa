@@ -3,9 +3,7 @@
     <vue-element-loading :active="show" spinner="ring" color="#38b2ac"/>
     <div class="table w-full border-blue-800 border-t-4 rounded shadow-2xl">
       <div class="table-row bg-teal-600 font-bold text-center text-lg text-white">
-        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.name}}</div>
-        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.email}}</div>
-        <div class="table-cell p-4">{{verbiage.client}} {{verbiage.phon}}</div>
+        <div class="table-cell p-4">{{verbiage.recipient}}</div>
         <div class="table-cell p-4">{{verbiage.notifications}}</div>
         <div class="table-cell p-4">{{verbiage.notifications}} {{verbiage.type}}</div>
       </div>
@@ -17,18 +15,8 @@
       >
         <div
           class="table-cell px-4 py-2"
-        >{{ notification.client.name }}
+        >{{ notification.sent_to }}
         </div>
-        <div
-          class="table-cell px-4 py-2"
-        >{{ notification.client.email }}
-        </div>
-
-        <div
-          class="table-cell px-4 py-2"
-        >{{ notification.client.phone }}
-        </div>
-
 
         <div
           class="table-cell px-4 py-2"
