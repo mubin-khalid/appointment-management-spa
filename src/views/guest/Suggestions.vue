@@ -14,23 +14,26 @@
         <div class="text-sm text-gray-700 mb-4">{{ cancelNote }}
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date1" :min="cachedDateTime.date1">
+          <input type="text" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date1" :min="cachedDateTime.date1" placeholder="DD/MM/YYYY" onmouseenter="(this.type='date')" 
+                 onblur="(this.type='text')">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
-                 :class="time1Class" v-model="time1"
+                 :class="time1Class" v-model="time1" placeholder="HH:MM"
           >
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date2" :min="cachedDateTime.date2">
+          <input type="text" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date2" :min="cachedDateTime.date2" placeholder="DD/MM/YYYY" onmouseenter="(this.type='date')"
+                 onblur="(this.type='text')">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
-                 :class="time2Class" v-model="time2">
+                 :class="time2Class" v-model="time2" placeholder="HH:MM">
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date3" :min="cachedDateTime.date3">
+          <input type="text" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
+                 v-model="date3" :min="cachedDateTime.date3" placeholder="DD/MM/YYYY" onmouseenter="(this.type='date')"
+                 onblur="(this.type='text')">
           <input type="text" class="bg-gray-400 rounded ml-2 p-2 h-10 outline-none focus:outline-none"
-                 :class="time3Class" v-model="time3">
+                 :class="time3Class" v-model="time3" placeholder="HH:MM">
         </div>
         <button
           class="outline-none focus:outline-none bg-teal-500 hover:bg-teal-600 text-white font-bold p-2 rounded"
@@ -87,46 +90,26 @@
       let day = currentDate.getDate() >= 10 ? currentDate.getDate() : '0' + currentDate.getDate()
       let month = currentDate.getMonth() + 1 >= 10 ? currentDate.getMonth() + 1 : '0' + currentDate.getMonth() + 1
       let year = currentDate.getFullYear()
-      this.cachedDateTime.date1  = 
-        this.cachedDateTime.date2 = 
-          this.cachedDateTime.date3 =  `${year}-${month}-${day}`
-      // this.cachedDateTime.date1 = this.date1 = new Date().getFullYear() + "-" +
-      //   ('0' + (new Date().getMonth() + 1)).slice(-2)
-      //   + '-' +
-      //   ('0' +
-      //     new Date().getDate()).slice(-2),
-        // this.cachedDateTime.time1 = this.time1 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-        //   new Date().getMinutes()).slice(-2) +
-        //   ':00',
-        // this.cachedDateTime.date2 = this.date2 = new Date().getFullYear() + "-" +
-        //   ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
-        //     new Date().getDate()).slice(-2),
-        // this.cachedDateTime.time2 = this.time2 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-        //   new Date().getMinutes()).slice(-2) +
-        //   ':00',
-        // this.cachedDateTime.date3 = this.date3 = new Date().getFullYear() + "-" +
-        //   ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
-        //     new Date().getDate()).slice(-2),
-        // this.cachedDateTime.time3 = this.time3 = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" +
-        //   new Date().getMinutes()).slice(-2) +
-        //   ':00',
-        this.get({
-          id: this.$route.params.id
-        }).then(response => {
-          this.suggestions = response.data.suggestions
-          this.cancelNote = response.data.verbiage.appointment_cancel_note
-          this.suggestButtonText = response.data.verbiage.suggest
-          if (!this.suggestions) {
-            this.$router.push({name: 'NotFound'})
-          }
-          if (typeof response.status !== 'undefined' && response.status == 'fail') {
-            this.suggested = true
-          } else {
-            this.suggested = false
-          }
-        }).catch(() => {
+      this.cachedDateTime.date1 =
+        this.cachedDateTime.date2 =
+          this.cachedDateTime.date3 = `${year}-${month}-${day}`
+      this.get({
+        id: this.$route.params.id
+      }).then(response => {
+        this.suggestions = response.data.suggestions
+        this.cancelNote = response.data.verbiage.appointment_cancel_note
+        this.suggestButtonText = response.data.verbiage.suggest
+        if (!this.suggestions) {
           this.$router.push({name: 'NotFound'})
-        })
+        }
+        if (typeof response.status !== 'undefined' && response.status == 'fail') {
+          this.suggested = true
+        } else {
+          this.suggested = false
+        }
+      }).catch(() => {
+        this.$router.push({name: 'NotFound'})
+      })
     },
     watch: {
       time1(newTime) {
