@@ -7,7 +7,7 @@
       <!--          @click="addLanguageModal = true"-->
       <!--    ></span>-->
       <!--</div>-->
-      <div class="table-row" v-for="(language, index) in languages" :key="language.id">
+      <div class="table-row" v-for="(language) in languages" :key="language.id">
         <div class="flex-1 px-4 py-2 table-cell text-center text-gray-700 text-lg text-sm align-middle">{{language
           .language}} <span class="text-sm font-light">({{language.language_code}})</span></div>
         <div class="table-cell text-gray-700 text-sm w-1 align-middle">

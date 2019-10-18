@@ -100,7 +100,7 @@
           username: this.username,
           password: this.password,
         })
-          .then(response => {
+          .then(() => {
             this.show = false
             this.popup('Logged in successfully', 'success', 2000)
             this.getUser().then(() => {
