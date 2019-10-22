@@ -100,7 +100,7 @@
       let locale = null
       let host = window.location.host
       if(host.indexOf('user') >= 0 || host.indexOf('localhost') >= 0) {
-        locale = 'en'
+        locale = 'se'
       }else if(host.indexOf('english') >= 0) {
         locale = 'en'
       } else if(host.indexOf('svenska') >= 0) {
@@ -108,7 +108,7 @@
       }
       
       this.verbiage({
-        languageCode: locale || 'en'
+        languageCode: locale || 'se'
       })
     },
     computed: {
