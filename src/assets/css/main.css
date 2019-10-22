@@ -185,3 +185,25 @@ input:checked + .slider:before {
 a:focus {
   outline: 0;
 }
+
+.theme-dt .vdatetime-popup__header,
+.theme-dt .vdatetime-calendar__month__day--selected > span > span,
+.theme-dt .vdatetime-calendar__month__day--selected:hover > span > span {
+  background: #65b4c6 !important;
+}
+
+.theme-dt .vdatetime-year-picker__item--selected,
+.theme-dt .vdatetime-time-picker__item--selected,
+.theme-dt .vdatetime-popup__actions__button {
+  color: #65b4c6 !important;
+}
+
+.theme-dt input[type=text] {
+  width: 66.66%;
+  color: #1a202c;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #cbd5e0;
+  cursor: pointer;
+}
