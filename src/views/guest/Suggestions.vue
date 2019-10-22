@@ -13,20 +13,39 @@
       >
         <div class="text-sm text-gray-700 mb-4">{{ cancelNote }}
         </div>
+
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-1-5 outline-none focus:outline-none cursor-pointer"
-                 v-model="date1" :min="cachedDateTime.date1">
-          <vue-timepicker type="text" class="md:ml-2" v-model="time1"></vue-timepicker>
+          <datetime v-model="date1" 
+                    type="datetime" 
+                    class="theme-dt p-2"
+                    value-zone="local"
+                    :placeholder="suggestionPlaceholder + ' 1'"
+                    format="yyyy-MM-dd HH:mm" 
+                    :min-datetime="cachedDateTime.date1"
+                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+          ></datetime>
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date2" :min="cachedDateTime.date2">
-          <vue-timepicker type="text" class="md:ml-2" v-model="time2"></vue-timepicker>
+          <datetime v-model="date2"
+                    type="datetime"
+                    class="theme-dt p-2"
+                    value-zone="local"
+                    :placeholder="suggestionPlaceholder + ' 2'"
+                    format="yyyy-MM-dd HH:mm"
+                    :min-datetime="cachedDateTime.date1"
+                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+          ></datetime>
         </div>
         <div class="mb-3">
-          <input type="date" class="bg-gray-400 rounded p-2 outline-none focus:outline-none cursor-pointer"
-                 v-model="date3" :min="cachedDateTime.date3">
-          <vue-timepicker type="text" class="md:ml-2 sm:mt-2 lg:mt-0" v-model="time3"></vue-timepicker>
+          <datetime v-model="date3"
+                    type="datetime"
+                    class="theme-dt p-2"
+                    value-zone="local"
+                    :placeholder="suggestionPlaceholder + ' 3'"
+                    format="yyyy-MM-dd HH:mm"
+                    :min-datetime="cachedDateTime.date1"
+                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+          ></datetime>
         </div>
         <button
           class="outline-none focus:outline-none bg-teal-500 hover:bg-teal-600 text-white font-bold p-2 rounded"
@@ -40,17 +59,20 @@
 
 <script>
   import Popup from '@/mixins/Popup'
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapActions} from 'vuex'
   import VueElementLoading from 'vue-element-loading'
-  import VueTimePicker from 'vue2-timepicker'
   import 'vue2-timepicker/dist/VueTimepicker.css'
+
+  import {Datetime} from 'vue-datetime'
+  // You need a specific loader for CSS files
+  import 'vue-datetime/dist/vue-datetime.css'
 
   export default {
     name: "Suggestions",
     mixins: [Popup],
     components: {
       VueElementLoading,
-      'vue-timepicker': VueTimePicker
+      Datetime,
     },
     computed: {},
     data() {
@@ -61,10 +83,11 @@
         suggested: false,
         error: false,
         show: false,
+        suggestionPlaceholder: '',
         time1Class: '',
         time2Class: '',
         time3Class: '',
-        timeRegex: /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/i,
+        timeRegex: /\d{2}:\d{2}/i,
         suggestions: false,
         showSuggestions: false,
         cachedDateTime: {
@@ -90,7 +113,7 @@
       let year = currentDate.getFullYear()
       this.cachedDateTime.date1 =
         this.cachedDateTime.date2 =
-          this.cachedDateTime.date3 = `${year}-${month}-${day}`
+          this.cachedDateTime.date3 = `${year}-${month}-${day}T00:00:00.000Z`
       this.get({
         id: this.$route.params.id
       }).then(response => {
@@ -98,6 +121,7 @@
         this.cancelNote = response.data.verbiage.appointment_cancel_note
         this.suggestButtonText = response.data.verbiage.send
         this.afterCancelNote = response.data.verbiage.aftercancelheading
+        this.suggestionPlaceholder = response.data.verbiage.suggestions_placeholder
         if (!this.suggestions) {
           this.$router.push({name: 'NotFound'})
         }
@@ -151,26 +175,38 @@
           this.popup('Please fill in at least first date.', 'error', 3000)
           return
         }
-        if (this.time1 == null || this.time1.HH == "" ||
-          this.time1.mm == "") {
-          this.popup('Select proper time.', 'error', 3000)
-          return
-        }
 
         if (this.error) {
           this.popup('Please input valid time. Format(24 hours): HH:MM', 'error', 3000)
           return
         }
         this.show = true
+        let date1 = this.date1.split('T')
+        let time1 = this.timeRegex.exec(date1[1])[0]
+        date1 = date1[0]
+        let date2 = null
+        let time2 = null        
+        let date3 = null
+        let time3 = null
+        if(this.date2 != '') {
+          date2 = this.date2.split('T')
+          time2 = this.timeRegex.exec(date2[1])[0]
+          date2 = date2[0]
+        }
+        if(this.date3 != '') {
+          date3 = this.date3.split('T')
+          time3 = this.timeRegex.exec(date3[1])[0]
+          date3 = date3[0]
+        }
         this.suggestTime({
           id: this.$route.params.id,
           cancelled_by: 'client',
-          date1: this.date1,
-          time1: (this.time1 != null) ? Object.values(this.time1).join(':') : null,
-          date2: this.date2,
-          time2: (this.time2 != null) ? Object.values(this.time2).join(':') : null,
-          date3: this.date3,
-          time3: (this.time3 != null) ? Object.values(this.time3).join(':') : null,
+          date1: date1,
+          time1: time1,
+          date2: date2,
+          time2: time2,
+          date3: date3,
+          time3: time3,
         }).then(() => {
           this.show = false
           this.suggested = true
