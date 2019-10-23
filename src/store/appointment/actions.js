@@ -43,7 +43,7 @@ export default {
       context.commit('addAppointment', response.data)
       return response.data
     }).catch(error => {
-      return error.message
+      return Promise.reject(error)
     })
   },
   get: (context, payload) => {
