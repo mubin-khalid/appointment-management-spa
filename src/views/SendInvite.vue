@@ -15,9 +15,18 @@
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="date">
             {{verbiage.date}}
           </label>
-          <input
-            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 hover:border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            id="date" type="date" v-model="date" @change="loadTemplate">
+          <datetime v-model="date"
+                    class="theme-dt"
+                    value-zone="local"
+                    format="yyyy-MM-dd"
+                    input-class="w-full rounded text-gray-700 bg-gray-200 p-3"
+                    :min-datetime="minDate"
+                    :phrases="{ok: verbiage.continue, cancel: verbiage.exit}"
+                    @close="loadTemplate"
+          ></datetime>
+        <!--  <input-->
+        <!--    class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 hover:border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"-->
+        <!--    id="date" type="date" v-model="date" @change="loadTemplate">-->
         </div>
         <div class="w-full md:w-1/2 px-3">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time">
@@ -174,6 +183,10 @@
   import '@fortawesome/fontawesome-free/css/all.min.css'
   import ModalComponent from '@/components/ModalComponent'
   import BookingConfirmationComponent from '@/components/BookingConfirmationComponent'
+  import {Datetime} from 'vue-datetime'
+  import 'vue-datetime/dist/vue-datetime.css'
+  import { Settings } from 'luxon'
+
 
   export default {
     name: "send-invite",
@@ -182,18 +195,26 @@
       'language': LanguageComponent,
       VueElementLoading,
       'modal': ModalComponent,
-      'confirm': BookingConfirmationComponent
+      'confirm': BookingConfirmationComponent,
+      Datetime,
 
     },
     created() {
       if (this.isAdmin) {
         this.$router.push({name: 'admin'})
       }
+      console.log(this.$parent.locale)
+      Settings.defaultLocale = this.$parent.locale
+      let currentDate = new Date(new Date().getTime());
+      let day = currentDate.getDate() >= 10 ? currentDate.getDate() : '0' + currentDate.getDate()
+      let month = currentDate.getMonth() + 1 >= 10 ? currentDate.getMonth() + 1 : '0' + currentDate.getMonth() + 1
+      let year = currentDate.getFullYear()
+      this.minDate = `${year}-${month}-${day}T00:00:00.000Z`
       this.retrieveClients({
         page: 0,
         all: true
       }).then(() => {
-        if(typeof this.clients[0] !== 'undefined') {
+        if (typeof this.clients[0] !== 'undefined') {
           this.client = this.clients[0].id
         }
       }),
@@ -202,7 +223,7 @@
           this.language = payload.languageId
           this.getTemplate({
             language: payload.languageId,
-            appointment_date: this.date,
+            appointment_date: this.date.split('T')[0],
             appointment_time: this.time,
             template_type: 'register'
           }).then((template) => {
@@ -212,6 +233,7 @@
     },
     data() {
       return {
+        minDate: '',
         showConfirmNotification: false,
         appointmentId: null,
         language: '0',
@@ -267,16 +289,19 @@
       ]),
 
       loadTemplate() {
+        if(this.language == 0) {
+          return
+        }
         this.show = true
         this.getTemplate({
           language: this.language,
-          appointment_date: this.date,
+          appointment_date: this.date.split('T')[0],
           appointment_time: this.time,
           template_type: 'register'
         }).then((template) => {
           this.message = template
           this.show = false
-        })  
+        })
       },
 
       saveClient() {
@@ -320,6 +345,11 @@
           this.popup('Please select Language', 'error', 2000)
           return
         }
+        if (this.date == '') {
+          this.popup('Please select Date', 'error', 2000)
+          return
+        }
+        this.date = this.date.split('T')[0]
         this.show = true
         this.save({
           client_id: this.client,
@@ -340,8 +370,9 @@
           this.popup('Appointment booked', 'success', 2000)
           this.show = false
           this.language = '0'
+          eventBus.$emit('resetLanguageComponent')
           this.date = new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + ('0' +
-            new Date().getDate()).slice(-2)
+            new Date().getDate()).slice(-2) + 'T00:00:00.000Z'
           this.time = ("0" + new Date().getHours()).slice(-2) + ':' + ("0" + new Date().getMinutes()).slice(-2) +
             ':00'
           this.client = '0'
@@ -353,8 +384,11 @@
           this.customerPhone = ''
           this.cancelEmail = 0
           this.email = ''
-          this.showConfirmNotification = true
           this.appointmentId = appointment.id
+          this.showConfirmNotification = true
+        }).catch(() => {
+          this.show = false
+          this.popup('Unable to book appointment', 'error', 2000)
         })
       }
     },
