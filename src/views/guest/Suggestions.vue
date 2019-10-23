@@ -61,7 +61,6 @@
   import Popup from '@/mixins/Popup'
   import {mapActions} from 'vuex'
   import VueElementLoading from 'vue-element-loading'
-  import 'vue2-timepicker/dist/VueTimepicker.css'
 
   import {Datetime} from 'vue-datetime'
   // You need a specific loader for CSS files
