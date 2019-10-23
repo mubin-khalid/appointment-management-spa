@@ -20,7 +20,8 @@
                     class="theme-dt p-2"
                     value-zone="local"
                     :placeholder="suggestionPlaceholder + ' 1'"
-                    format="yyyy-MM-dd HH:mm" 
+                    format="yyyy-MM-dd HH:mm"
+                    input-class="w-2/3 rounded text-gray-700 bg-gray-200 p-2"
                     :min-datetime="cachedDateTime.date1"
                     :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
@@ -32,6 +33,7 @@
                     value-zone="local"
                     :placeholder="suggestionPlaceholder + ' 2'"
                     format="yyyy-MM-dd HH:mm"
+                    input-class="w-2/3 rounded text-gray-700 bg-gray-200 p-2"
                     :min-datetime="cachedDateTime.date1"
                     :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
@@ -43,6 +45,7 @@
                     value-zone="local"
                     :placeholder="suggestionPlaceholder + ' 3'"
                     format="yyyy-MM-dd HH:mm"
+                    input-class="w-2/3 rounded text-gray-700 bg-gray-200 p-2"
                     :min-datetime="cachedDateTime.date1"
                     :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
@@ -63,7 +66,6 @@
   import VueElementLoading from 'vue-element-loading'
 
   import {Datetime} from 'vue-datetime'
-  // You need a specific loader for CSS files
   import 'vue-datetime/dist/vue-datetime.css'
 
   export default {
