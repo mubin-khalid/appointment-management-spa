@@ -199,11 +199,5 @@ a:focus {
 }
 
 .theme-dt input[type=text] {
-  width: 66.66%;
-  color: #1a202c;
-  text-align: center;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  background-color: #cbd5e0;
   cursor: pointer;
 }

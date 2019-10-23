@@ -62,6 +62,13 @@
         appointmentCancelText: 'Appointment Cancelled.',
         cancelButton: 'Cancel Appointment.',
         viewDetailsButton: 'View Details.',
+        confirmationBox: {
+          title: null,
+          text: null,
+          confirmButtonText: null,
+          cancelButtonText: null,
+          
+        },
         suggestButton: 'Suggest.',
       }
     },
@@ -76,6 +83,10 @@
         this.cancelButton = response.data.verbiage.cancel_appointment
         this.suggestButton = response.data.verbiage.suggest
         this.appointmentCancelText = response.data.verbiage.appointment_cancelled
+        this.confirmationBox.title = response.data.verbiage.confirmation_title
+        this.confirmationBox.text = response.data.verbiage.confirmation_text
+        this.confirmationBox.confirmButtonText = response.data.verbiage.yes
+        this.confirmationBox.cancelButtonText = response.data.verbiage.no
         this.suggestions = response.data.suggestions
         if (typeof response.status !== 'undefined' && response.status == 'fail') {
           this.disable = 'hidden'
@@ -101,17 +112,30 @@
         }
       },
       cancelAppointment() {
-        this.show = true
-        this.cancel({
-          id: this.$route.params.id,
-          cancelled_by: 'client'
-        }).then(() => {
-          this.show = false
-          this.popup(this.appointmentCancelText, 'success', 5000)
-          this.disable = 'hidden'
-          this.details = this.appointmentCancelText
-        }).catch(() => {
-          this.show = false
+        this.$swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+        }).then((result) => {
+          if (result.value) {
+            this.show = true
+            this.cancel({
+              id: this.$route.params.id,
+              cancelled_by: 'client'
+            }).then(() => {
+              this.show = false
+              this.popup(this.appointmentCancelText, 'success', 5000)
+              this.disable = 'hidden'
+              this.details = this.appointmentCancelText
+            }).catch(() => {
+              this.show = false
+            })
+          }
         })
       },
       suggestNewTimings() {
