@@ -22,7 +22,7 @@
                     :placeholder="suggestionPlaceholder + ' 1'"
                     format="yyyy-MM-dd HH:mm" 
                     :min-datetime="cachedDateTime.date1"
-                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+                    :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
         </div>
         <div class="mb-3">
@@ -33,7 +33,7 @@
                     :placeholder="suggestionPlaceholder + ' 2'"
                     format="yyyy-MM-dd HH:mm"
                     :min-datetime="cachedDateTime.date1"
-                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+                    :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
         </div>
         <div class="mb-3">
@@ -44,7 +44,7 @@
                     :placeholder="suggestionPlaceholder + ' 3'"
                     format="yyyy-MM-dd HH:mm"
                     :min-datetime="cachedDateTime.date1"
-                    :phrases="{ok: 'Continue', cancel: 'Exit'}"
+                    :phrases="{ok: continuePhrase, cancel: exitPhrase}"
           ></datetime>
         </div>
         <button
@@ -89,6 +89,8 @@
         timeRegex: /\d{2}:\d{2}/i,
         suggestions: false,
         showSuggestions: false,
+        continuePhrase: '',
+        exitPhrase: '',
         cachedDateTime: {
           date1: null,
           time1: null,
@@ -121,6 +123,8 @@
         this.suggestButtonText = response.data.verbiage.send
         this.afterCancelNote = response.data.verbiage.aftercancelheading
         this.suggestionPlaceholder = response.data.verbiage.suggestions_placeholder
+        this.continuePhrase = response.data.verbiage.continue
+        this.exitPhrase = response.data.verbiage.exit
         if (!this.suggestions) {
           this.$router.push({name: 'NotFound'})
         }
